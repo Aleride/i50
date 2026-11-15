@@ -1,447 +1,730 @@
-<!doctype html>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#e4e4d4">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjMDAwIi8+PGcgZmlsbD0iI2ZmZiI+PHJlY3QgeD0iMTAiIHk9IjIwIiB3aWR0aD0iOCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMjQiIHk9IjIwIiB3aWR0aD0iMTQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQ2IiB5PSIyMCIgd2lkdGg9IjgiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjEyIiB5PSIyMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjI0IiB5PSIyMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQ0IiB5PSIyMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjUyIiB5PSIyMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjEyIiB5PSIyNCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjI0IiB5PSIyNCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQyIiB5PSIyNCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjU0IiB5PSIyNCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjEyIiB5PSIyNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjI0IiB5PSIyNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQyIiB5PSIyNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjU0IiB5PSIyNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjEyIiB5PSIyOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjI0IiB5PSIyOCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0MiIgeT0iMjgiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI1NCIgeT0iMjgiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxMiIgeT0iMzAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIzNCIgeT0iMzAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0MiIgeT0iMzAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI1NCIgeT0iMzAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxMiIgeT0iMzIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIzNCIgeT0iMzIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0MiIgeT0iMzIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI1NCIgeT0iMzIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxMiIgeT0iMzQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIzNCIgeT0iMzQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0MiIgeT0iMzQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI1NCIgeT0iMzQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxMiIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIyNCIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIzNCIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0NCIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI1MiIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxMCIgeT0iMzgiIHdpZHRoPSI4IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIyNiIgeT0iMzgiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNDYiIHk9IjM4IiB3aWR0aD0iOCIgaGVpZ2h0PSIyIi8+PC9nPjwvc3ZnPg==">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjMDAwIi8+PGcgZmlsbD0iI2ZmZiI+PHJlY3QgeD0iMTAiIHk9IjIwIiB3aWR0aD0iOCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMjQiIHk9IjIwIiB3aWR0aD0iMTQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQ2IiB5PSIyMCIgd2lkdGg9IjgiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjEyIiB5PSIyMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjI0IiB5PSIyMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQ0IiB5PSIyMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjUyIiB5PSIyMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjEyIiB5PSIyNCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjI0IiB5PSIyNCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQyIiB5PSIyNCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjU0IiB5PSIyNCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjEyIiB5PSIyNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjI0IiB5PSIyNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQyIiB5PSIyNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjU0IiB5PSIyNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjEyIiB5PSIyOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjI0IiB5PSIyOCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0MiIgeT0iMjgiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI1NCIgeT0iMjgiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxMiIgeT0iMzAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIzNCIgeT0iMzAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0MiIgeT0iMzAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI1NCIgeT0iMzAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxMiIgeT0iMzIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIzNCIgeT0iMzIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0MiIgeT0iMzIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI1NCIgeT0iMzIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxMiIgeT0iMzQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIzNCIgeT0iMzQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0MiIgeT0iMzQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI1NCIgeT0iMzQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxMiIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIyNCIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIzNCIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0NCIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI1MiIgeT0iMzYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxMCIgeT0iMzgiIHdpZHRoPSI4IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIyNiIgeT0iMzgiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNDYiIHk9IjM4IiB3aWR0aD0iOCIgaGVpZ2h0PSIyIi8+PC9nPjwvc3ZnPg==">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>I50</title>
+<style>
+@font-face{font-family:DOSVGA;src:url(data:font/woff;base64,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) format("woff");font-weight:normal;font-style:normal;font-display:block}
+/* ============================================================
+   米白老式机箱：斜面高光 / 压印 / 凹陷屏幕（1990s beige box）
+   ============================================================ */
+:root{
+  --case:#e4e4d4;        /* 机身米白 */
+  --case-hi:#f6f6ec;     /* 受光面 */
+  --case-lo:#c8c9b5;     /* 背光面 */
+  --hi:#ffffff;          /* 斜面高光 */
+  --lo:#9a9b88;          /* 斜面暗边 */
+  --line:#b5b6a2;
+  --btn:#eaeade;
+  --fg:#2f302a;          /* 深色字 */
+  --dim:#6b6c60;
+  --pwr:#2fbf6b; --hdd:#e8961e; --net:#2f74d0;
+  --bevel: inset 1px 1px 0 rgba(255,255,255,.95),
+           inset -1px -1px 0 rgba(105,106,92,.45),
+           0 1px 2px rgba(0,0,0,.16);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#d6d7c5;color:var(--fg);
+ font:14px/1.4 system-ui,-apple-system,"Segoe UI","Noto Sans SC",sans-serif;
+ overscroll-behavior:none;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+#app{display:flex;flex-direction:column;height:100dvh;
+ background:linear-gradient(160deg,var(--case-hi),var(--case) 45%,var(--case-lo));
+ padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
 
-<title>v86</title>
-<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,interactive-widget=resizes-content">
-<meta name="description" content="Run KolibriOS, Linux or Windows 98 in your browser">
+/* ---------- 机箱前面板 ---------- */
+#panel{display:flex;align-items:center;gap:9px;padding:8px 11px;flex:0 0 auto;
+ background:linear-gradient(#f6f6ed,#dadbd0);
+ border-bottom:2px solid var(--lo);
+ box-shadow:inset 0 1px 0 #fff, 0 2px 5px rgba(0,0,0,.14)}
+#power{width:38px;height:38px;flex:0 0 auto;border-radius:5px;
+ background:linear-gradient(145deg,#f7f7ee,#d6d7c7);
+ border:2px solid;border-color:var(--hi) var(--lo) var(--lo) var(--hi);
+ box-shadow:var(--bevel);display:flex;align-items:center;justify-content:center;
+ font-size:17px;color:#67685b}
+#power:active,#panel button:not(#power):active{
+ border-color:var(--lo) var(--hi) var(--hi) var(--lo);
+ box-shadow:inset 2px 2px 4px rgba(0,0,0,.28);transform:translateY(1px)}
+#power.on{color:#1a7a42;text-shadow:0 0 6px rgba(47,191,107,.5)}
+/* 压印铭牌 */
+/* 铭牌：拉丝铝框 + 四角沉头铆钉 + 内嵌黑色亚克力面板 */
+.stamp{position:relative;display:flex;align-items:center;flex:0 0 auto;
+ background:
+   repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,rgba(0,0,0,.018) 1px 2px),
+   linear-gradient(155deg,#eceee4 0%,#c4c5b3 38%,#dcdccf 62%,#adaf9f 100%);
+ border:1px solid #8c8d7e;border-radius:2px;padding:4px 7px;line-height:0;
+ box-shadow:inset 1px 1px 0 rgba(255,255,255,.95),
+            inset -1px -1px 0 rgba(0,0,0,.30),
+            0 1px 2px rgba(0,0,0,.22),0 0 0 1px rgba(0,0,0,.06)}
+.stamp img{position:relative;z-index:1;display:block;width:auto;height:20px;
+ background:#000;image-rendering:pixelated;border:1px solid #151513;border-radius:1px;
+ box-shadow:inset 0 1px 3px rgba(0,0,0,.95),0 1px 0 rgba(255,255,255,.38)}
+/* 面板玻璃的斜向反光 */
+.stamp::before{content:"";position:absolute;z-index:2;pointer-events:none;
+ left:7px;right:7px;top:4px;bottom:4px;border-radius:1px;
+ background:linear-gradient(158deg,rgba(255,255,255,.14) 0%,
+            rgba(255,255,255,.03) 38%,transparent 55%)}
+/* 四颗铆钉 */
+.stamp::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+ background:
+  radial-gradient(circle 1.6px at 3px 3px,#6f7062 0 55%,rgba(255,255,255,.85) 75%,transparent 100%),
+  radial-gradient(circle 1.6px at calc(100% - 3px) 3px,#6f7062 0 55%,rgba(255,255,255,.85) 75%,transparent 100%),
+  radial-gradient(circle 1.6px at 3px calc(100% - 3px),#6f7062 0 55%,rgba(255,255,255,.85) 75%,transparent 100%),
+  radial-gradient(circle 1.6px at calc(100% - 3px) calc(100% - 3px),#6f7062 0 55%,rgba(255,255,255,.85) 75%,transparent 100%)}
+.leds{display:flex;gap:8px;flex:0 0 auto}
+.led{display:flex;align-items:center;gap:4px;font:700 9px/1 ui-monospace,monospace;
+ color:#86877a;text-shadow:1px 1px 0 #fff}
+.led i{width:10px;height:10px;border-radius:2px;display:block;background:#b3b4a2;
+ box-shadow:inset 1px 1px 2px rgba(0,0,0,.42),0 1px 0 #fff}
+.led.pwr.on i{background:var(--pwr);box-shadow:0 0 7px var(--pwr),inset 0 0 2px #fff}
+.led.pwr.blink i{animation:ledblink .5s steps(1,end) infinite}
+@keyframes ledblink{
+  0%,49%{background:var(--pwr);box-shadow:0 0 7px var(--pwr),inset 0 0 2px #fff}
+  50%,100%{background:#b3b4a2;box-shadow:inset 1px 1px 2px rgba(0,0,0,.42),0 1px 0 #fff}
+}
+.led.pwr.err i{background:#d63a2c;box-shadow:0 0 7px #d63a2c,inset 0 0 2px #fff}
+.led.hdd.on i{background:var(--hdd);box-shadow:0 0 7px var(--hdd),inset 0 0 2px #fff}
+.led.net.on i{background:var(--net);box-shadow:0 0 7px var(--net),inset 0 0 2px #fff}
+.sp{flex:1 1 auto}
+#panel button:not(#power){flex:0 0 auto;
+ background:linear-gradient(145deg,#f7f5ee,#dcd7ca);color:var(--fg);
+ border:2px solid;border-color:var(--hi) var(--lo) var(--lo) var(--hi);
+ box-shadow:var(--bevel);border-radius:4px;padding:6px 9px;font-size:14px;
+ min-height:34px;touch-action:manipulation}
 
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="192.png">
+/* ---------- 显示器 ---------- */
+#stage{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;
+ display:flex;align-items:center;justify-content:center;touch-action:none;
+ background:radial-gradient(ellipse at 28% 18%,#f4f4ea,#dcdcd0 62%,#c8c9b7);
+ border-top:2px solid #fff;border-bottom:2px solid var(--lo);
+ box-shadow:inset 0 3px 8px rgba(255,255,255,.75),
+            inset 0 -4px 10px rgba(0,0,0,.14)}
+/* 显示器塑料外框（凸起斜面） */
+#frame{position:relative;line-height:0;padding:13px;
+ background:linear-gradient(145deg,#f5f5eb,#cfd0c1);border:2px solid;
+ border-color:var(--hi) var(--lo) var(--lo) var(--hi);border-radius:9px;
+ box-shadow:inset 2px 2px 3px #fff,inset -2px -2px 5px rgba(0,0,0,.18),
+            0 5px 16px rgba(0,0,0,.3)}
+#frame.rotated{background:none;border-color:transparent;box-shadow:none;padding:0}
+#wrap{transform-origin:center center;transition:transform .12s ease-out}
+#screen_container{background:#080a08;border-radius:4px;
+ border:3px solid;border-color:#7c7d6f #fff #fff #7c7d6f;
+ box-shadow:inset 0 0 20px rgba(0,0,0,.85),0 0 0 3px #e7e8d9}
+#screen_container canvas{image-rendering:pixelated}
+#frame.scan::after{content:"";position:absolute;inset:13px;pointer-events:none;
+ border-radius:3px;
+ background:repeating-linear-gradient(rgba(0,0,0,0) 0 2px, rgba(0,0,0,.20) 2px 4px)}
+#frame.rotated.scan::after{inset:0}
+#hint{display:none!important;position:absolute;left:50%;bottom:12px;transform:translateX(-50%);
+ background:linear-gradient(#fffef6,#e2e3d4);color:#4a463c;font-size:12px;font-weight:600;
+ padding:7px 14px;border:2px solid;border-color:#fff var(--lo) var(--lo) #fff;
+ border-radius:4px;box-shadow:0 3px 10px rgba(0,0,0,.25);
+ display:none;white-space:nowrap;max-width:92vw}
 
-<script src="build/v86_all.js?98e7110c2"></script>
-<link rel="stylesheet" href="v86.css">
+/* ---------- 键盘条 ---------- */
+#dock.hide{display:none}
+#dock{flex:0 0 auto;padding:8px 9px calc(8px + env(safe-area-inset-bottom));
+ background:linear-gradient(#f5f5eb,#d9dacd);
+ border-top:2px solid #fff;
+ box-shadow:inset 0 1px 0 #fff,0 -2px 5px rgba(0,0,0,.10)}
+#kbd{position:absolute;left:-9999px;top:0;width:1px;height:1px;opacity:0;border:0}
+#keys{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+#keys::-webkit-scrollbar{display:none}
+#keys button{flex:0 0 auto;min-width:46px;
+ background:linear-gradient(145deg,#f9f9f0,#dbdcce);color:var(--fg);
+ border:2px solid;border-color:var(--hi) var(--lo) var(--lo) var(--hi);
+ box-shadow:var(--bevel);border-radius:4px;padding:8px 9px;font-size:13px;
+ min-height:38px;touch-action:manipulation}
+#keys button:active{border-color:var(--lo) var(--hi) var(--hi) var(--lo);
+ box-shadow:inset 2px 2px 4px rgba(0,0,0,.28);transform:translateY(1px)}
+#keys button.lit{background:linear-gradient(145deg,#cbd5dc,#aabcc4);color:#2a3a42}
+#keys button.wide{min-width:64px}
+#keys button.go{background:linear-gradient(145deg,#f4f4e4,#d8d9c3);
+ color:#464535;font-weight:700;min-width:52px}
 
-<div>
-    <div id="boot_options">
-        <div id="filter">
-            Family:
-            <label><input id=filter_linux type=checkbox> Linux</label>
-            <label><input id=filter_bsd type=checkbox> BSD</label>
-            <label title="Microsoft Windows"><input id=filter_windows type=checkbox> Windows</label>
-            <label><input id=filter_unix type=checkbox> Unix-like</label>
-            <label><input id=filter_dos type=checkbox> DOS</label>
-            <label><input id=filter_custom type=checkbox> Custom</label>
-            <!--<label><input type=checkbox> Hobby OS</label>-->
-            UI:
-            <label title="Graphical desktop"><input id=filter_graphical type=checkbox> Graphical</label>
-            <label title="Text-based or serial console only"><input id=filter_text type=checkbox> Text</label>
-            Medium:
-            <label title="Boots from floppy disk"><input id=filter_floppy type=checkbox> Floppy</label>
-            <label title="Boots from CD-ROM"><input id=filter_cd type=checkbox> CD</label>
-            <label title="Boots from hard disk"><input id=filter_hd type=checkbox> HD</label>
-            Size:
-            <label title="Fits it bootsector"><input id=filter_bootsector type=checkbox> 512 B</label>
-            <label><input id=filter_lt5mb type=checkbox> &lt;5 MB</label>
-            <label><input id=filter_gt5mb type=checkbox> &gt;5 MB</label>
-            Status:
-            <label title="Most recent release is younger than 10 years"><input id=filter_modern type=checkbox> Modern</label>
-            <label title="No release in 10 years"><input id=filter_historic type=checkbox> Historic</label>
-            License:
-            <label><input id=filter_opensource type=checkbox> Open-Source</label>
-            <label><input id=filter_proprietary type=checkbox> Proprietary</label>
-            Arch:
-            <label><input id=filter_16bit type=checkbox> 16-bit</label>
-            <label><input id=filter_32bit type=checkbox> 32-bit</label>
-            <!--<label><input type=checkbox> Microkernel</label>-->
-            <!--<label title="Uses a saved memory dump to skip the boot process"><input type=checkbox> skip boot process</label>-->
-            <!--<label title="Supports networking (in v86)"><input type=checkbox> networking</label>
-            <label title="Supports audio output (in v86)"><input type=checkbox> audio</label>
-            <label title="Supports the serial console (in v86)"><input type=checkbox> serial</label>
-            <label title="Supports filesharing using virtio-9p (in v86)"><input type=checkbox> 9pfs</label>-->
-            Lang:
-            <label title="Written in assembly language"><input id=filter_asm type=checkbox> ASM</label>
-            <label title="Written in C"><input id=filter_c type=checkbox> C</label>
-            <label title="Written in C++"><input id=filter_cpp type=checkbox> C++</label>
-            <label title="Written in other languages"><input id=filter_other_lang type=checkbox> Other</label>
-            <!--<label><input type=checkbox> contains: games</label>
-            <label><input type=checkbox> contains: demos</label>
-            <label><input type=checkbox> contains: compilers</label>
-            <label><input type=checkbox> contains: web browsers</label>-->
-            <div style="text-align: right; float: right">
-                 <a id="reset_filters">Reset filters</a> / <a href="#setup">Skip to custom settings</a>
-            </div>
-            <br style="clear: both">
+/* ---------- 弹出菜单 ---------- */
+#menu{position:fixed;inset:0;z-index:70;background:rgba(58,54,46,.48);
+ display:none;align-items:center;justify-content:center;padding:18px;overflow:auto}
+#menu.on{display:flex}
+#menu .box{background:linear-gradient(#f7f7ee,#dedfce);border:2px solid;
+ border-color:#fff var(--lo) var(--lo) #fff;border-radius:6px;
+ box-shadow:inset 1px 1px 0 #fff,0 10px 34px rgba(0,0,0,.38);
+ padding:15px;width:min(360px,92vw);display:flex;flex-direction:column;gap:8px}
+#menu h3{font-size:15px;font-weight:700;color:#35362e;
+ text-shadow:1px 1px 0 #fff}
+#menu h4{font-size:10px;color:#74756a;font-weight:700;margin-top:5px;
+ letter-spacing:1px;text-transform:uppercase;text-shadow:1px 1px 0 #fff}
+#menu button{background:linear-gradient(145deg,#f9f9f0,#dbdcce);color:var(--fg);
+ border:2px solid;border-color:var(--hi) var(--lo) var(--lo) var(--hi);
+ box-shadow:var(--bevel);border-radius:4px;padding:11px 12px;font-size:14px;
+ text-align:left;min-height:44px}
+#menu button:active{border-color:var(--lo) var(--hi) var(--hi) var(--lo);
+ box-shadow:inset 2px 2px 4px rgba(0,0,0,.28)}
+#menu button.danger{background:linear-gradient(145deg,#e6e6d8,#cfd0bf);color:#55564a}
+#menu .note{font-size:11px;color:#6b6c60;line-height:1.65;margin-top:2px}
+#menu select{background:#fffef6;color:var(--fg);border:2px solid;
+ border-color:var(--lo) var(--hi) var(--hi) var(--lo);border-radius:4px;
+ box-shadow:inset 1px 1px 3px rgba(0,0,0,.14);
+ padding:10px;font-size:13px;width:100%;min-height:44px}
+#menu input[type=text]{background:#fffef6;color:var(--fg);border:2px solid;
+ border-color:var(--lo) var(--hi) var(--hi) var(--lo);border-radius:4px;
+ box-shadow:inset 1px 1px 3px rgba(0,0,0,.14);
+ padding:10px;font-size:13px;width:100%;min-height:44px;margin-top:2px}
+#menu input[type=text]::placeholder{color:#9d9e90}
+
+/* ---------- 关机（断电，保留深色） ---------- */
+#off{position:fixed;inset:0;z-index:60;background:#171714;display:none;
+ flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#off.on{display:flex}
+#off .glyph{font-size:40px;color:#48493e}
+#off h2{font-size:16px;font-weight:500;color:#b3b4a4}
+#off p{font-size:12px;color:#7a7b6e;text-align:center;max-width:80vw;line-height:1.6}
+#off button{background:linear-gradient(145deg,#f9f9f0,#dbdcce);color:var(--fg);
+ border:2px solid;border-color:var(--hi) var(--lo) var(--lo) var(--hi);
+ box-shadow:var(--bevel);padding:12px 26px;border-radius:4px;font-size:15px}
+
+/* ---------- 响应式 ---------- */
+@media(max-width:767px){
+  #panel{gap:6px;padding:6px 8px}
+  .stamp{padding:3px 5px}
+  .stamp img{height:17px}
+  .stamp::before{left:5px;right:5px;top:3px;bottom:3px}
+  #power{width:34px;height:34px;font-size:15px}
+  #panel button:not(#power){padding:5px 8px;min-height:32px}
+  #frame{padding:9px}
+  #keys button{min-width:42px;padding:8px 7px;font-size:12px}
+  #keys button.go{min-width:46px}
+}
+@media(min-width:1200px){ #panel{padding:9px 15px} }
+/* 不再提示「请横屏」：想横放用户自己点旋转按钮 */
+@media(hover:hover) and (pointer:fine){
+  #panel button:not(#power):hover{background:linear-gradient(145deg,#fff,#e4e5d6)}
+  #keys button:hover{background:linear-gradient(145deg,#fff,#e4e5d6)}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="panel">
+    <button id="power" title="电源 / 关机菜单">⏻</button>
+    <span class="stamp"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiAzMiI+PHJlY3Qgd2lkdGg9IjUyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMDAwIi8+PGcgZmlsbD0iI2ZmZiI+PHJlY3QgeD0iNCIgeT0iNCIgd2lkdGg9IjgiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjE4IiB5PSI0IiB3aWR0aD0iMTQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQwIiB5PSI0IiB3aWR0aD0iOCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjE4IiB5PSI2IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMzgiIHk9IjYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0NiIgeT0iNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjYiIHk9IjgiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxOCIgeT0iOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjM2IiB5PSI4IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNDgiIHk9IjgiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI2IiB5PSIxMCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjE4IiB5PSIxMCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjM2IiB5PSIxMCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQ4IiB5PSIxMCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjYiIHk9IjEyIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMTgiIHk9IjEyIiB3aWR0aD0iMTIiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjM2IiB5PSIxMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQ4IiB5PSIxMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjYiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMjgiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMzYiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNDgiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNiIgeT0iMTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIyOCIgeT0iMTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIzNiIgeT0iMTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0OCIgeT0iMTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI2IiB5PSIxOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjI4IiB5PSIxOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjM2IiB5PSIxOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQ4IiB5PSIxOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjYiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMTgiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMjgiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMzgiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNDYiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNCIgeT0iMjIiIHdpZHRoPSI4IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIyMCIgeT0iMjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNDAiIHk9IjIyIiB3aWR0aD0iOCIgaGVpZ2h0PSIyIi8+PC9nPjwvc3ZnPg==" alt="I50"></span>
+    <div class="leds">
+      <span class="led pwr" id="led-pwr"><i></i>PWR</span>
+      <span class="led hdd" id="led-hdd"><i></i>HDD</span>
+      <span class="led net" id="led-net"><i></i>NET</span>
+    </div>
+    <span class="sp"></span>
+    <button data-act="rot" id="btn-rot-top" title="旋转屏幕 90°">⟳</button>
+    <button data-act="dock" id="btn-dock" title="收起/展开键盘条">⌨</button>
+    <button data-act="fs" title="全屏">⛶</button>
+    <button data-act="menu" title="更多">☰</button>
+  </div>
+
+  <div id="stage">
+    <div id="frame">
+      <div id="wrap">
+        <div id="screen_container">
+          <div style="white-space:pre; font:16px/16px DOSVGA,ui-monospace,monospace; letter-spacing:0; -webkit-font-smoothing:none; text-rendering:geometricPrecision"></div>
+          <canvas style="display: none"></canvas>
         </div>
-        <hr>
-
-        <div class="table" id="oses">
-            <div class="th">
-                <div class="tr">
-                    <span>Name</span>
-                    <span>Size</span>
-                    <span>UI</span>
-                    <span>Family</span>
-                    <span>Arch</span>
-                    <span>Status</span>
-                    <span>Source</span>
-                    <span>Lang</span>
-                    <span>Medium</span>
-                    <span>Notes</span>
-                </div>
-            </div>
-<a class="tr" href="?profile=android" id="start_android"><span>Android</span> <span>54+ MB</span> <span><div class=gui_icon></div></span> <span>Linux</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C++</span> <span>CD</span> <span>Android x86 1.6-r2</span></a>
-<a class="tr" href="?profile=archlinux" id="start_archlinux"><span>Arch Linux</span> <span>15+ MB</span> <span><div class=tui_icon></div></span> <span>Linux</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>9pfs</span> <span>Various packages, including Xorg, Firefox and more</span></a>
-<a class="tr" href="?profile=buildroot" id="start_buildroot"><span>Buildroot Linux</span> <span>4.9 MB</span> <span><div class=tui_icon></div></span> <span>Linux</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>bzImage</span> <span>Minimal Linux with Lua, ping, curl, telnet</span></a>
-<a class="tr" href="?profile=dsl" id="start_dsl"><span>Damn Small Linux</span> <span>50 MB</span> <span><div class=gui_icon></div></span> <span>Linux</span> <span>32-bit</span> <span>Historic</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>4.11.rc2 with Firefox 2.0</span></a>
-<a class="tr" href="?profile=elks" id="start_elks"><span>ELKS</span> <span>1.2 MB</span> <span><div class=tui_icon></div></span> <span>Linux-like</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>Linux for 8086</span></a>
-<a class="tr" href="?profile=nodeos" id="start_nodeos"><span>NodeOS</span> <span>14 MB</span> <span><div class=tui_icon></div></span> <span>Linux</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>bzImage</span> <span>Linux with nodejs as /bin/init</span></a>
-<a class="tr" href="?profile=tilck" id="start_tilck"><span>Tilck</span> <span>16 MB</span> <span><div class=tui_icon></div></span> <span>Linux-like</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>Tiny Linux-Compatible Kernel</span></a>
-<a class="tr" href="?profile=freebsd" id="start_freebsd"><span>FreeBSD</span> <span>16+ MB</span> <span><div class=tui_icon></div></span> <span>BSD</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>FreeBSD 12.0</span></a>
-<a class="tr" href="?profile=netbsd" id="start_netbsd"><span>NetBSD</span> <span>23+ MB</span> <span><div class=tui_icon></div></span> <span>BSD</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>NetBSD 4.0 with Xorg</span></a>
-<a class="tr" href="?profile=openbsd" id="start_openbsd"><span>OpenBSD</span> <span>11+ MB</span> <span><div class=tui_icon></div></span> <span>BSD</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>OpenBSD 6.6</span></a>
-<a class="tr" href="?profile=fiwix" id="start_fiwix"><span>FiwixOS</span> <span>4.2+ MB</span> <span><div class=tui_icon></div></span> <span>Unix-like</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>With Doom</span></a>
-<a class="tr" href="?profile=minix" id="start_minix"><span>Minix</span> <span>30+ MB</span> <span><div class=tui_icon></div></span> <span>Unix-like</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>Minix 3.3</span></a>
-<a class="tr" href="?profile=redox" id="start_redox"><span>Redox</span> <span>31+ MB</span> <span><div class=gui_icon></div></span> <span>Unix-like</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>Rust</span> <span>HD</span> <span>A Unix-like microkernel OS written in Rust</span></a>
-<a class="tr" href="?profile=serenity" id="start_serenity"><span>SerenityOS</span> <span>16+ MB</span> <span><div class=gui_icon></div></span> <span>Unix-like</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C++</span> <span>HD</span> <span>Web browser, various games and demos</span></a>
-<a class="tr" href="?profile=sortix" id="start_sortix"><span>Sortix</span> <span>67 MB</span> <span><div class=tui_icon></div></span> <span>Unix-like</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C++</span> <span>CD</span> <span>A small self-hosting Unix-like operating system</span></a>
-<a class="tr" href="?profile=soso" id="start_soso"><span>Soso</span> <span>7.6 MB</span> <span><div class=gui_icon></div></span> <span>Unix-like</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span> A Simple Unix-like operating system</span></a>
-<a class="tr" href="?profile=syllable" id="start_syllable"><span>Syllable</span> <span>28+ MB</span> <span><div class=gui_icon></div></span> <span>Unix-like</span> <span>32-bit</span> <span>Historic</span> <span>Open-source</span> <span>C++</span> <span>HD</span> <span>A user friendly, POSIX compatible OS</span></a>
-<a class="tr" href="?profile=unix-v7" id="start_unix-v7"><span>Unix V7</span> <span>0.5+ MB</span> <span><div class=tui_icon></div></span> <span>Unix</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>C</span> <span>HD</span> <span>Unix V7 port for x86, including Amsterdam Compiler Kit</span></a>
-<a class="tr" href="?profile=beos" id="start_beos"><span>BeOS 5</span> <span>34+ MB</span> <span><div class=gui_icon></div></span> <span>BeOS</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>C++</span> <span>HD</span> <span>With Opera 3.62, NetPositive</span></a>
-<a class="tr" href="?profile=haiku" id="start_haiku"><span>Haiku</span> <span>41+ MB</span> <span><div class=gui_icon></div></span> <span>BeOS</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C++</span> <span>HD</span> <span>Networking (WebPositive), OCaml, 2048, NetHack</span></a>
-<a class="tr" href="?profile=aros-broadway" id="start_aros-broadway"><span>AROS Broadway</span> <span>25+ MB</span> <span><div class=gui_icon></div></span> <span>AmigaOS</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>AmigaOS-like graphical OS</span></a>
-<a class="tr" href="?profile=icaros" id="start_icaros"><span>Icaros Desktop</span> <span>60+ MB</span> <span><div class=gui_icon></div></span> <span>AmigaOS</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>AmigaOS-like graphical OS</span></a>
-<a class="tr" href="?profile=tinyaros" id="start_tinyaros"><span>Tiny Aros</span> <span>17+ MB</span> <span><div class=gui_icon></div></span> <span>AmigaOS</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>AmigaOS-like graphical OS</span></a>
-<a class="tr" href="?profile=9front" id="start_9front"><span>9front</span> <span>5.2+ MB</span> <span><div class=gui_icon></div></span> <span>Plan 9</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>An actively maintained fork of Plan 9</span></a>
-<a class="tr" href="?profile=9legacy" id="start_9legacy"><span>9legacy</span> <span>13 MB</span> <span><div class=gui_icon></div></span> <span>Plan 9</span> <span>32-bit</span> <span>Historic</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>A set of patches based on the latest release of Plan 9</span></a>
-<a class="tr" href="?profile=reactos" id="start_reactos"><span>ReactOS</span> <span>17+ MB</span> <span><div class=gui_icon></div></span> <span>Windows-like</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C++</span> <span>HD</span> <span>QtWeb, LBreakout2, OpenTTD, Bochs, TCC</span></a>
-<a class="tr" href="?profile=windows1" id="start_windows1"><span>Windows 1.01</span> <span>0.7 MB</span> <span><div class=gui_icon></div></span> <span>Windows</span> <span>16-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM, C</span> <span>Floppy</span> <span>The first release version of Windows</span></a>
-<a class="tr" href="?profile=windows2" id="start_windows2"><span>Windows 2.03</span> <span>1.8 MB</span> <span><div class=gui_icon></div></span> <span>Windows</span> <span>16-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM, C</span> <span>HD</span> <span>Reversi, Paint</span></a>
-<a class="tr" href="?profile=windows30" id="start_windows30"><span>Windows 3.0</span> <span>6.5 MB</span> <span><div class=gui_icon></div></span> <span>Windows</span> <span>16-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM, C</span> <span>CD</span> <span>CorelDRAW! 2.0, Reversi</span></a>
-<a class="tr" href="?profile=windows31" id="start_windows31"><span>Windows 3.1</span> <span>17 MB</span> <span><div class=gui_icon></div></span> <span>Windows</span> <span>16-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM, C</span> <span>HD</span> <span>QBasic, Minesweeper, Solitaire</span></a>
-<a class="tr" href="?profile=windows95" id="start_windows95"><span>Windows 95</span> <span>19+ MB</span> <span><div class=gui_icon></div></span> <span>Windows</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM, C</span> <span>HD</span> <span>Age of Empires, FASM, POV-Ray, Hover!</span></a>
-<a class="tr" href="?profile=windows98" id="start_windows98"><span>Windows 98</span> <span>13+ MB</span> <span><div class=gui_icon></div></span> <span>Windows</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM, C</span> <span>HD</span> <span>FreeCell, Hearts, sheep.exe, IE 5</span></a>
-<a class="tr" href="?profile=windows-me" id="start_windows-me"><span>Windows ME</span> <span>14+ MB</span> <span><div class=gui_icon></div></span> <span>Windows</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM, C</span> <span>HD</span> <span>Visual Basic, Office 97</span></a>
-<a class="tr" href="?profile=windowsnt3" id="start_windowsnt3"><span>Windows NT 3.1</span> <span>18+ MB</span> <span><div class=gui_icon></div></span> <span>Windows</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>C++</span> <span>HD</span> <span>The first retail version of Windows NT</span></a>
-<a class="tr" href="?profile=windowsnt35" id="start_windowsnt35"><span>Windows NT 3.51</span> <span>28+ MB</span> <span><div class=gui_icon></div></span> <span>Windows</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>C++</span> <span>HD</span> <span>Internet Explorer 3 and Visual FoxPro 3.0</span></a>
-<a class="tr" href="?profile=windowsnt4" id="start_windowsnt4"><span>Windows NT 4.0</span> <span>16+ MB</span> <span><div class=gui_icon></div></span> <span>Windows</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>C++</span> <span>HD</span> <span>Windows NT 4.0 Service Pack 1</span></a>
-<a class="tr" href="?profile=windows2000" id="start_windows2000"><span>Windows 2000</span> <span>28+ MB</span> <span><div class=gui_icon></div></span> <span>Windows</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>C++</span> <span>HD</span> <span>IE 6, K-Meleon, Winamp, Delphi, NetHack and more</span></a>
-<a class="tr" href="?profile=86dos" id="start_86dos"><span>86-DOS</span> <span>0.1 MB</span> <span><div class=tui_icon></div></span> <span>DOS</span> <span>16-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM</span> <span>Floppy</span> <span>86-DOS version 1.0</span></a>
-<a class="tr" href="?profile=ibm-exploring" id="start_ibm-exploring"><span>Exploring IBM</span> <span>0.1 MB</span> <span><div class=tui_icon></div></span> <span>DOS</span> <span>16-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM</span> <span>Floppy</span> <span>Learning program on how to use a computer</span></a>
-<a class="tr" href="?profile=freedos" id="start_freedos"><span>FreeDOS</span> <span>0.6 MB</span> <span><div class=tui_icon></div></span> <span>DOS</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM, C</span> <span>Floppy</span> <span>nasm, vim, debug.com, Rogue, various demos</span></a>
-<a class="tr" href="?profile=freegem" id="start_freegem"><span>FreeGEM</span> <span>1.6+ MB</span> <span><div class=gui_icon></div></span> <span>DOS</span> <span>16-bit</span> <span>Historic</span> <span>Open-source</span> <span>ASM, C</span> <span>HD</span> <span>Graphical desktop for FreeDOS</span></a>
-<a class="tr" href="?profile=xcom" id="start_xcom"><span>Xcom</span> <span>1.3 MB</span> <span><div class=gui_icon></div></span> <span>DOS</span> <span>16-bit</span> <span>Historic</span> <span>Open-source</span> <span>ASM, C</span> <span>Floppy</span> <span>Graphical desktop for FreeDOS</span></a>
-<a class="tr" href="?profile=msdos4" id="start_msdos4"><span>MS-DOS 4</span> <span>0.5 MB</span> <span><div class=tui_icon></div></span> <span>DOS</span> <span>16-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM</span> <span>Floppy</span> <span>Contains EDLIN</span></a>
-<a class="tr" href="?profile=msdos" id="start_msdos"><span>MS-DOS 6.22</span> <span>2.4+ MB</span> <span><div class=tui_icon></div></span> <span>DOS</span> <span>16-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM</span> <span>HD</span> <span>Doom, Sim City, OCaml 1.0, Turbo C and more</span></a>
-<a class="tr" href="?profile=pcmos" id="start_pcmos"><span>PC-MOS/386</span> <span>0.7 MB</span> <span><div class=tui_icon></div></span> <span>DOS</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>ASM, C</span> <span>Floppy</span> <span>Multi-user and multi-tasking OS</span></a>
-<a class="tr" href="?profile=psychdos" id="start_psychdos"><span>PsychDOS</span> <span>4.6+ MB</span> <span><div class=gui_icon></div></span> <span>DOS</span> <span>16-bit</span> <span>Historic</span> <span>Open-source</span> <span>ASM</span> <span>HD</span> <span>ANSI-like graphical desktop for FreeDOS</span></a>
-<a class="tr" href="?profile=leetos" id="start_leetos"><span>lEEt/OS</span> <span>0.5 MB</span> <span><div class=tui_icon></div></span> <span>DOS</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM, C</span> <span>Floppy</span> <span>Graphical desktop for ST-DOS</span></a>
-<a class="tr" href="?profile=bleskos" id="start_bleskos"><span>BleskOS</span> <span>0.2 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>Alternative OS for older PCs</span></a>
-<a class="tr" href="?profile=bluejay" id="start_bluejay"><span>Blue Jay</span> <span>83 KB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Floppy</span> <span>Based on MikeOS</span></a>
-<a class="tr" href="?profile=boneos" id="start_boneos"><span>BoneOS</span> <span>3.0 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>Simple hobby OS</span></a>
-<a class="tr" href="?profile=bootchess" id="start_bootchess"><span>BootChess</span> <span>4.0 KB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Floppy</span> <span>Chess in a bootsector</span></a>
-<a class="tr" href="?profile=catk" id="start_catk"><span>CatK</span> <span>3.2 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>Simple Unix-like kernel</span></a>
-<a class="tr" href="?profile=crazierl" id="start_crazierl"><span>Crazierl</span> <span>11 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C, Erlang</span> <span>Multiboot</span> <span>An Erlang Operating System</span></a>
-<a class="tr" href="?profile=duskos" id="start_duskos"><span>Dusk OS</span> <span>0.4 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>A 32-bit Forth</span></a>
-<a class="tr" href="?profile=floppybird" id="start_floppybird"><span>Floppy Bird</span> <span>6.5 KB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>Floppy</span> <span>Flappy Bird game in a bootsector</span></a>
-<a class="tr" href="?profile=helenos" id="start_helenos"><span>HelenOS</span> <span>7.9 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>A microkernel-based multiserver OS</span></a>
-<a class="tr" href="?profile=hello-v86" id="start_hello-v86"><span>Hello v86</span> <span>512 B</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Bootsector</span> <span>Small bootsector demo for v86</span></a>
-<a class="tr" href="?profile=house" id="start_house"><span>House</span> <span>1.1 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>Haskell</span> <span>Floppy</span> <span>Haskell User's Operating System and Environment</span></a>
-<a class="tr" href="?profile=jx" id="start_jx"><span>JX</span> <span>1.3 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>Java</span> <span>Floppy</span> <span>Java-based operating system</span></a>
-<a class="tr" href="?profile=kolibrios" id="start_kolibrios"><span>KolibriOS</span> <span>1.3 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Floppy</span> <span>Various apps, games and demos</span></a>
-<a class="tr" href="?profile=littlekernel" id="start_littlekernel"><span>Little Kernel</span> <span>0.4 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>Multiboot</span> <span>An embedded kernel designed for small systems</span></a>
-<a class="tr" href="?profile=mcp" id="start_mcp"><span>M/CP</span> <span>512 B</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Bootsector</span> <span>The Minimal Control Program</span></a>
-<a class="tr" href="?profile=mikeos" id="start_mikeos"><span>MikeOS</span> <span>0.2 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>CD</span> <span>Contains a FORTH and BASIC interpreter and several games</span></a>
-<a class="tr" href="?profile=mobius" id="start_mobius"><span>Mobius</span> <span>1.3 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>Floppy</span> <span>POSIX and Win32 compatible OS</span></a>
-<a class="tr" href="?profile=mu" id="start_mu"><span>Mu</span> <span>0.2 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>Minimal-dependency hobbyist computing stack</span></a>
-<a class="tr" href="?profile=nanoshell" id="start_nanoshell"><span>NanoShell</span> <span>3.5 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>Multi-tasked 32-bit OS with Win9x-like GUI</span></a>
-<a class="tr" href="?profile=newos" id="start_newos"><span>NewOS</span> <span>0.6 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C++</span> <span>Floppy</span> <span>Cross-platform portable OS</span></a>
-<a class="tr" href="?profile=nopeos" id="start_nopeos"><span>Nope OS</span> <span>92 KB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>Simple OS with BASIC interpreter</span></a>
-<a class="tr" href="?profile=oberon" id="start_oberon"><span>Oberon</span> <span>1.6 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Historic</span> <span>Open-source</span> <span>Oberon</span> <span>HD</span> <span>Native Oberon 2.3.6</span></a>
-<a class="tr" href="?profile=qnx" id="start_qnx"><span>QNX 4.05</span> <span>1.4 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>C</span> <span>Floppy</span> <span>1999 demo disk</span></a>
-<a class="tr" href="?profile=sectorlisp" id="start_sectorlisp"><span>SectorLISP</span> <span>512 B</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Bootsector</span> <span>Bootstrapping LISP in a Boot Sector</span></a>
-<a class="tr" href="?profile=skift" id="start_skift"><span>Skift</span> <span>44 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C++</span> <span>CD</span> <span>A hobby OS built from scratch using C/C++</span></a>
-<a class="tr" href="?profile=snowdrop" id="start_snowdrop"><span>Snowdrop</span> <span>0.4 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Floppy</span> <span>16-bit hobby OS with GUI</span></a>
-<a class="tr" href="?profile=solos" id="start_solos"><span>Sol OS</span> <span>0.3 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Proprietary</span> <span>ASM</span> <span>Floppy</span> <span>Simple graphical OS</span></a>
-<a class="tr" href="?profile=stillalive" id="start_stillalive"><span>Still Alive</span> <span>10 KB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>Floppy</span> <span>Bootable demo that plays "Still Alive" from Portal</span></a>
-<a class="tr" href="?profile=t3xforth" id="start_t3xforth"><span>T3XFORTH</span> <span>59 KB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Historic</span> <span>Open-source</span> <span>ASM</span> <span>Floppy</span> <span>An old-school, plain vanilla FORTH system</span></a>
-<a class="tr" href="?profile=tetros" id="start_tetros"><span>TetrOS</span> <span>512 B</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Bootsector</span> <span>Tetris that fits into the boot sector</span></a>
-<a class="tr" href="?profile=toaruos" id="start_toaruos"><span>ToaruOS</span> <span>6.3 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>A hobby OS written from scratch</span></a>
-<a class="tr" href="?profile=bootbasic" id="start_bootbasic"><span>bootBASIC</span> <span>512 B</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Bootsector</span> <span>A BASIC in 512 bytes of x86 machine code</span></a>
-<a class="tr" href="?profile=pillman" id="start_pillman"><span>Pillman</span> <span>512 B</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Bootsector</span> <span>A yellow thing eats pills and is chased by monsters</span></a>
-<a class="tr" href="?profile=bootlogo" id="start_bootlogo"><span>bootLogo</span> <span>512 B</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Bootsector</span> <span>Logo language in 508 bytes</span></a>
-<a class="tr" href="?profile=bootrogue" id="start_bootrogue"><span>bootRogue</span> <span>512 B</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Bootsector</span> <span>A roguelike game that fits in a boot sector</span></a>
-<a class="tr" href="?profile=dino" id="start_dino"><span>dino</span> <span>512 B</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Bootsector</span> <span>Chrome's t-rex based bootsector game</span></a>
-<a class="tr" href="?profile=invaders" id="start_invaders"><span>Invaders</span> <span>512 B</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Bootsector</span> <span>Invaders in a bootsector</span></a>
-<a class="tr" href="?profile=sanos" id="start_sanos"><span>Sanos</span> <span>0.5 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>Minimalistic 32-bit x86 OS</span></a>
-<a class="tr" href="?profile=sectorforth" id="start_sectorforth"><span>sectorforth</span> <span>512 B</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>16-bit</span> <span>Modern</span> <span>Open-source</span> <span>ASM</span> <span>Bootsector</span> <span>16-bit x86 Forth in a bootsector</span></a>
-<a class="tr" href="?profile=dancy" id="start_dancy"><span>Dancy</span> <span>1.3 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>Dancy Operating System</span></a>
-<a class="tr" href="?profile=curios" id="start_curios"><span>CuriOS</span> <span>6.6 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>HD</span> <span>Simple GUI based OS inspired by AmigaOS</span></a>
-<a class="tr" href="?profile=os64" id="start_os64"><span>OS64</span> <span>2.2 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>Commodore 64 emulator OS for x86 (slow)</span></a>
-<a class="tr" href="?profile=netboot.xyz" id="start_netboot.xyz"><span>netboot.xyz</span> <span>1.0 MB</span> <span><div class=tui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C</span> <span>CD</span> <span>Netboot into various operating systems (slow)</span></a>
-<a class="tr" href="?profile=squeaknos" id="start_squeaknos"><span>SqueakNOS</span> <span>20 MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Modern</span> <span>Open-source</span> <span>C, Smalltalk</span> <span>CD</span> <span>Smalltalk as a Standalone OS</span></a>
-<a class="tr" href="?profile=chokanji4" id="start_chokanji4"><span>Chokanji 4</span> <span>13+ MB</span> <span><div class=gui_icon></div></span> <span>Custom</span> <span>32-bit</span> <span>Historic</span> <span>Proprietary</span> <span>C</span> <span>HD</span> <span>A Japanese OS based on the TRON project</span></a>
-        </div>
-
-        <hr>
-        <h4 id="setup">Setup</h4>
-        <table>
-            <tr>
-                <td width="350"><label for="cdrom_image">CD image</label></td>
-                <td>
-                    <input type="file" id="cdrom_image">
-                </td>
-            </tr>
-
-            <tr>
-                <td><label for="floppy_image">Floppy disk image</label></td>
-                <td><input type="file" id="fda_image"> or <a id="fda_toggle_empty_disk">create empty floppy disk</a><br></td>
-            </tr>
-
-            <tr>
-                <td><label for="floppy_image">Second floppy disk image</label></td>
-                <td><input type="file" id="fdb_image"> or <a id="fdb_toggle_empty_disk">create empty floppy disk</a><br></td>
-            </tr>
-
-            <tr>
-                <td><label for="hda_image">Hard disk image</label></td>
-                <td><input type="file" id="hda_image"> or <a id="hda_toggle_empty_disk">create empty hard disk</a><br></td>
-            </tr>
-
-            <tr>
-                <td><label for="hdb_image">Second hard disk image</label></td>
-                <td><input type="file" id="hdb_image"> or <a id="hdb_toggle_empty_disk">create empty hard disk</a><br></td>
-            </tr>
-
-            <!--
-            <tr>
-                <td><label for="multiboot_image">Multiboot kernel image (experimental)</td>
-                <td><input type="file" id="multiboot_image"><br></td>
-            </tr>
-            -->
-
-            <tr>
-                <td><label for="bzimage">Kernel image (bzimage)</label></td>
-                <td><input type="file" id="bzimage"><br></td>
-            </tr>
-            <tr>
-                <td><label for="initrd">initrd</label></td>
-                <td><input type="file" id="initrd"><br></td>
-            </tr>
-
-            <tr>
-                <td><label for="bios">BIOS</label></td>
-                <td><input type="file" id="bios"><br></td>
-            </tr>
-
-            <tr>
-                <td><label for="vga_bios">VGA BIOS</label></td>
-                <td><input type="file" id="vga_bios"><br></td>
-            </tr>
-
-            <tr>
-                <td colspan="2"><small>Disk images are not uploaded to the server</small><hr></td>
-            </tr>
-
-            <tr>
-                <td><label for="memory_size">Memory size</label></td>
-                <td>
-                    <input id="memory_size" type="number" value="128" min="16" max="2048" step="16"> MB<br>
-                </td>
-            </tr>
-
-            <tr>
-                <td><label for="vga_memory_size">Video Memory size</label></td>
-                <td>
-                    <input id="vga_memory_size" type="number" value="8" min="1" max="128" step="1"> MB<br>
-                </td>
-            </tr>
-
-            <tr>
-                <td colspan="2"><hr></td>
-            </tr>
-
-            <tr>
-                <td><label for="relay_url">Networking proxy</label><br>
-                    Presets: <a id="network_none">none</a>, <a id="network_inbrowser">inbrowser</a>, <a id="network_relay">public relay</a>, <a id="network_wisp">wisp</a>, <a id="network_fetch">fetch</a></td>
-                <td>
-                    <input id="relay_url" type="text" value="wss://relay.widgetry.org/">
-                </td>
-            </tr>
-
-            <tr>
-                <td><label for="net_device_type">Network Device Type</label></td>
-                <td>
-                    <select id="net_device_type">
-                        <option value="ne2k">ne2k</option>
-                        <option value="virtio">virtio</option>
-                        <option value="none">none</option>
-                    </select>
-                 </td>
-            </tr>
-
-            <tr id="mtu_ui" style="display: none">
-                <td><label for="mtu">Network MTU</label></td>
-                <td>
-                    <input id="mtu" type="number" value="1500" min="68" max="65535" step="1"> B<br>
-                 </td>
-            </tr>
-
-            <tr>
-                <td colspan="2"><hr></td>
-            </tr>
-
-            <tr>
-                <td><label for="modem">Modem</label></td>
-                <td>
-                    <select id="modem">
-                        <option value="none">None</option>
-                        <option value="1">UART1</option>
-                        <option value="2">UART2</option>
-                        <option value="3">UART3</option>
-                    </select>
-                 </td>
-            </tr>
-
-            <tr>
-                <td colspan="2"><hr></td>
-            </tr>
-
-            <tr>
-                <td><label for="disable_audio">Disable audio</label></td>
-                <td>
-                    <input id="disable_audio" type="checkbox"><br>
-                </td>
-            </tr>
-
-            <tr>
-                <td><label for="acpi">Enable ACPI (experimental)</label></td>
-                <td>
-                    <input id="acpi" type="checkbox"><br>
-                </td>
-            </tr>
-
-            <tr>
-                <td colspan="2"><hr></td>
-            </tr>
-
-            <tr>
-                <td><label for="boot_order">Boot order</label></td>
-                <td>
-                    <select id="boot_order">
-                        <option value="0">Auto</option>
-                        <option value="213">CD / Floppy / Hard Disk</option>
-                        <option value="123">CD / Hard Disk / Floppy</option>
-                        <option value="231">Floppy / CD / Hard Disk</option>
-                        <option value="321">Floppy / Hard Disk / CD</option>
-                        <option value="312">Hard Disk / Floppy / CD</option>
-                        <option value="132">Hard Disk / CD / Floppy</option>
-                    </select>
-                 </td>
-            </tr>
-        </table>
-
-        <br>
-        <button id="start_emulation">Start Emulation</button>
+      </div>
     </div>
+    <div id="hint"></div>
+  </div>
 
-    <div id="runtime_options" style="display: none">
-        <button id="run">Pause</button>
-        <button id="reset">Reset</button>
-        <button id="exit">Exit</button>
-        <button id="ctrlaltdel">Send Ctrl-Alt-Del</button>
-        <button id="alttab">Send Alt-Tab</button>
-        <button id="get_fda_image">Get floppy image</button>
-        <button id="get_fdb_image">Get second floppy image</button>
-        <button id="get_hda_image">Get hard disk image</button>
-        <button id="get_hdb_image">Get second hard disk image</button>
-        <button id="get_cdrom_image">Get CD-ROM image</button>
-        <button id="change_fda_image">Insert floppy image</button>
-        <button id="change_fdb_image">Insert second floppy image</button>
-        <button id="change_cdrom_image" title="Either a single .iso file or multiple files of any type">Insert CD image</button>
-        <button id="save_state">Save State</button>
-        <button id="load_state">Load State</button>
-        <button id="memory_dump">Memory Dump</button>
-        <button id="capture_network_traffic" title="In wireshark: file -> import from hex -> tick direction indication, timestamp %s.%f">Capture network traffic</button>
-        <button id="toggle_mouse">Disable mouse</button>
-        <button id="lock_mouse">Lock mouse</button>
-        <button id="fullscreen">Go fullscreen</button>
-        <button id="take_screenshot">Take screenshot</button>
-        <button id="mute">Mute</button>
-        <button id="toggle_theatre">Enable theatre mode</button>
-        <button style="display: none" id="toggle_zoom_to_fit">Enable zoom to fit</button>
-
-        <label>
-            Scale:
-            <input type="number" min="0.25" step="0.25" value="1.0" id="scale" style="width: 50px">
-        </label>
+  <div id="dock">
+    <input id="kbd" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <div id="keys">
+      <button data-act="run" data-cmd="MENU" class="go">菜单</button>
+      <button data-act="run" data-cmd="NET" class="go">连网</button>
+      <button data-act="run" data-cmd="HELP" class="go">帮助</button>
+      <button data-act="rot" id="btn-rot">旋转</button>
+      <button data-key="esc">Esc</button>
+      <button data-key="tab">Tab</button>
+      <button data-key="ctrl">Ctrl</button>
+      <button data-key="alt">Alt</button>
+      <button data-key="f1">F1</button>
+      <button data-key="f3">F3</button>
+      <button data-key="f5">F5</button>
+      <button data-key="f8">F8</button>
+      <button data-key="up">↑</button>
+      <button data-key="down">↓</button>
+      <button data-key="left">←</button>
+      <button data-key="right">→</button>
+      <button data-key="enter" class="wide">Enter</button>
+      <button data-act="caps" id="btn-caps">Caps</button>
+      <button data-act="cad" class="wide">Ctrl+Alt+Del</button>
     </div>
-    <pre style="display: none" id="loading"></pre>
+  </div>
 </div>
 
-<div id="screen_container" style="display: none">
-    <div id="screen"></div>
-    <canvas id="vga"></canvas>
-    <div style="position: absolute; top: 0; z-index: 10">
-        <textarea class="phone_keyboard"></textarea>
-    </div>
+<div id="menu">
+  <div class="box">
+    <h3>电源</h3>
+    <button data-act="m-reset">重启（Reset）</button>
+
+    <h4>网卡 · NE2000</h4>
+    <select id="nic-select">
+      <option value="wisps://wisp.mercurywork.shop">① Wisp 公共节点 — 全协议（推荐）</option>
+      <option value="wss://relay.widgetry.org/">② wsproxy 公共节点 — 全协议，慢一些</option>
+      <option value="__custom__">③ 自己搭的 Wisp / wsproxy 地址…</option>
+    </select>
+    <input id="nic-custom" type="text" placeholder="wisp:// 或 wss:// 开头的地址" style="display:none">
+    <div class="note" id="nic-note"></div>
+
+    <h4>显示</h4>
+    <button data-act="m-scan">扫描线滤镜</button>
+
+    <h4>关机</h4>
+    <button data-act="m-off" class="danger">关机</button>
+    <button data-act="m-close">取消</button>
+  </div>
 </div>
 
-
-<div id="runtime_infos" style="display: none">
-    Running: <span id="running_time">0s</span> <br>
-    Speed: <span id="speed">0</span> mIPS<br>
-    Avg speed: <span id="avg_speed">0</span> mIPS<br>
-    <br>
-    <div id="info_storage" style="display: none">
-        <b>IDE device<span id="ide_type"></span></b><br>
-        Sectors read: <span id="info_storage_sectors_read">0</span><br>
-        Bytes read: <span id="info_storage_bytes_read">0</span><br>
-        Sectors written: <span id="info_storage_sectors_written">0</span><br>
-        Bytes written: <span id="info_storage_bytes_written">0</span><br>
-        Status: <span id="info_storage_status"></span><br>
-        <br>
-    </div>
-    <div id="info_filesystem" style="display: none">
-        <b>9p Filesystem</b><br>
-        Bytes read: <span id="info_filesystem_bytes_read">0</span><br>
-        Bytes written: <span id="info_filesystem_bytes_written">0</span><br>
-        <div style="white-space: nowrap; overflow-x: hidden">Last file: <span id="info_filesystem_last_file"></span></div>
-        Status: <span id="info_filesystem_status"></span><br>
-        <br>
-    </div>
-    <div id="info_network" style="display: none">
-        <b>Network</b><br>
-        Bytes received: <span id="info_network_bytes_received">0</span><br>
-        Bytes transmitted: <span id="info_network_bytes_transmitted">0</span><br>
-        <br>
-    </div>
-    <b>VGA</b><br>
-    Mode: <span id="info_vga_mode"></span><br>
-    Resolution: <span id="info_res">-</span><br>
-    <br>
-    Mouse: <span id="info_mouse_enabled">No</span><br>
-
-    <div id="description" style="display: none"><br></div>
+<div id="off">
+  <div class="glyph">⏻</div>
+  <h2>已关机</h2>
+  <p>虚拟电脑已停止运行，CPU 占用归零。</p>
+  <button data-act="on">开机</button>
 </div>
 
-<div id="filesystem_panel" style="display: none">
-    <label>
-        Send files to emulator<br>
-        <input type="file" id="filesystem_send_file" multiple>
-    </label>
-    <br><br>
-    <label>
-        Get file from emulator<br>
-        <input type="text" id="filesystem_get_file" placeholder="Absolute path">
-    </label>
-</div>
+<script>
+(function(){
+"use strict";
 
-<br style="clear: both"><br>
+/* ==============================================================
+   FreeDOS 网络终端
+   A: freedos-boot.img  (启动软盘)
+   C: freedos-disk.img  (网卡驱动 + mTCP + 应用，可选)
 
-<div id="terminal"></div>
+   资源 100% 来自本仓库，不回退任何公共 CDN / 外部站点。
+   缺任何一个必需文件 → 立刻红灯，不做任何补救尝试。
 
-<button id="toggle_ui" style="display: none">Hide UI</button>
-<div id="theatre_background" style="display: none"></div>
+     必需  libv86.js  v86.wasm
+           bios/seabios.bin  bios/vgabios.bin
+           freedos-boot.img
+     可选  freedos-disk.img（缺了就不挂 C: 盘）
+   ============================================================== */
 
-<br style="clear: both">
-<code>Version: <a id="version" href="https://github.com/copy/v86/commits/98e7110c2">98e7110c2</a> (Feb 16, 2021 12:02)</code>
+var LOCAL = {
+  js:"libv86.js", wasm:"v86.wasm",
+  bios:"bios/seabios.bin", vga:"bios/vgabios.bin"
+};
+var FDA_URL = "freedos-boot.img", FDA_SIZE = 737280;              /* A: 启动软盘 */
+var HDA_URL = "freedos-disk.img", HDA_SIZE = 16 * 1024 * 1024;   /* C: 可选 */
 
-<hr>
-<a href="debug.html">Enable debug</a>
-&mdash;
-<a href="https://github.com/copy/v86/blob/master/Readme.md">Readme</a>
-&mdash;
-<a href="https://github.com/copy/v86">Project on Github</a>
-&mdash;
-<a href="https://github.com/copy/v86#compatibility">Compatibility</a>
+var DEFAULT_RELAY = "wisps://wisp.mercurywork.shop";
+
+var qs = new URLSearchParams(location.search);
+var TOUCH = (window.matchMedia && matchMedia("(pointer: coarse)").matches)
+            || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+var opt = {
+  mem:  parseInt(qs.get("mem"),10) || (TOUCH ? 32 : 64),
+  relay: qs.get("relay") !== null ? qs.get("relay") : DEFAULT_RELAY,
+  cors:  qs.get("cors") || ""
+};
+
+var $ = function(i){ return document.getElementById(i); };
+var wrap=$("wrap"), frame=$("frame"), stage=$("stage"), kbd=$("kbd");
+var powerBtn=$("power"), offEl=$("off"), menuEl=$("menu"), nicSel=$("nic-select");
+var ledPwr=$("led-pwr"), ledHdd=$("led-hdd"), ledNet=$("led-net");
+
+var em=null, running=false, res={w:720,h:400};
+var zoom=1, rot=0, fitMode=true;
+/* 旋转状态按「窄屏 / 宽屏」分开记，手机转过不影响电脑 */
+function rotKey(){ return "v86-rot-" + (window.innerWidth < 768 ? "narrow" : "wide"); }
+try{ rot = localStorage.getItem(rotKey()) === "1" ? 90 : 0; }catch(e){}
+var bootAt=0, ipsLast=0, ipsTime=0;
+var hddTimer=null, netTimer=null;
+
+function say(t){}
+function on(el,cls){ el.classList.add(cls); }
+function off(el,cls){ el.classList.remove(cls); }
+
+/* 电源灯：加载中绿闪 / 就绪绿常亮 / 出错红常亮 / 关机灭 */
+function pwrState(s){
+  off(ledPwr,"on"); off(ledPwr,"blink"); off(ledPwr,"err");
+  if(s==="boot")       { on(powerBtn,"on"); on(ledPwr,"blink"); }
+  else if(s==="ready") { on(powerBtn,"on"); on(ledPwr,"on"); }
+  else if(s==="error") { on(powerBtn,"on"); on(ledPwr,"err"); }
+  else                 { off(powerBtn,"on"); }
+}
+
+/* ---------------- 资源探活：仅认本仓库文件 ---------------- */
+function firstOk(list){
+  return new Promise(function(res){
+    var i=0;
+    (function next(){
+      if(i>=list.length){ res(null); return; }
+      var u=list[i++];
+      fetch(u,{method:"GET",headers:{Range:"bytes=0-0"},cache:"no-store"})
+        .then(function(r){ r.ok ? res(u) : next(); })
+        .catch(next);
+    })();
+  });
+}
+function loadScript(list){
+  return new Promise(function(res,rej){
+    var i=0;
+    (function next(){
+      if(i>=list.length){ rej(new Error("缺少仓库文件：libv86.js")); return; }
+      var s=document.createElement("script");
+      s.src=list[i++]; s.onload=function(){res();}; s.onerror=next;
+      document.head.appendChild(s);
+    })();
+  });
+}
+
+/* ---------------- 屏幕自适应 ---------------- */
+function fit(){
+  var sc = $("screen_container");
+  var w = sc.offsetWidth || res.w, h = sc.offsetHeight || res.h;
+  if(!w || !h) return;
+  var cw = stage.clientWidth - 6, ch = stage.clientHeight - 6;
+  if(cw<=0 || ch<=0) return;
+  // 不做任何自动旋转：横放与否完全由用户点「旋转」按钮决定
+  // 预留显示器外框的厚度，避免白色边框被裁掉
+  var pad = rot ? 10 : (window.innerWidth < 768 ? 22 : 34);
+  var aw = Math.max(80, cw - pad), ah = Math.max(80, ch - pad);
+  var s = rot ? Math.min(aw/h, ah/w) : Math.min(aw/w, ah/h);
+  zoom = Math.min(3.2, Math.max(0.3, s));
+  applyTransform();
+  $("btn-rot-top").classList.toggle("lit", !!rot);
+  try{ localStorage.setItem(rotKey(), rot ? "1" : "0"); }catch(e){}
+}
+/* 旋转与自适应缩放 */
+function applyTransform(){
+  wrap.style.transform = "rotate("+rot+"deg) scale("+zoom.toFixed(3)+")";
+  $("frame").classList.toggle("rotated", rot === 90);
+}
+function showHint(t){}   /* 真机不会弹提示，界面保持静默 */
+addEventListener("resize", fit);
+addEventListener("orientationchange", function(){ setTimeout(fit,300); });
+
+/* ---------------- 开机 ---------------- */
+function boot(){
+  if(em){ try{ em.destroy(); }catch(e){} em=null; }
+  running=false;
+  pwrState("boot");
+  offEl.classList.remove("on");
+
+  Promise.all([
+    firstOk([LOCAL.wasm]),
+    firstOk([LOCAL.bios]),
+    firstOk([LOCAL.vga ]),
+    firstOk([FDA_URL]),
+    firstOk([HDA_URL])
+  ]).then(function(r){
+    /* 必需资源缺一不可：缺了直接报错，不尝试任何外部替代 */
+    var need = [
+      ["v86.wasm",         r[0]],
+      ["bios/seabios.bin", r[1]],
+      ["bios/vgabios.bin", r[2]],
+      ["freedos-boot.img", r[3]]
+    ];
+    for(var i=0;i<need.length;i++){
+      if(!need[i][1]) throw new Error("缺少仓库文件：" + need[i][0]);
+    }
+    return loadScript([LOCAL.js]).then(function(){
+      return {wasm:r[0], bios:r[1], vga:r[2],
+              fda:FDA_URL, fdaSize:FDA_SIZE, hda:r[4]};
+    });
+  }).then(function(u){
+    var o = {
+      wasm_path:u.wasm,
+      memory_size:opt.mem*1024*1024,
+      vga_memory_size:2*1024*1024,
+      screen_container:$("screen_container"),
+      bios:{url:u.bios}, vga_bios:{url:u.vga},
+      fda:{url:u.fda, size:u.fdaSize},
+      autostart:true,
+      boot_order:0x321           /* FLOPPY_HARDDISK_CD */
+    };
+    if(u.hda){
+      o.hda = {url:u.hda, size:HDA_SIZE};
+      // 服务器支持 HTTP Range 才按需加载，否则整盘下载
+      o.hda.async = (window.__rangeOK === true);
+    }
+    if(opt.relay){
+      o.net_device={type:"ne2k", relay_url:opt.relay};
+      if(opt.cors) o.net_device.cors_proxy=opt.cors;
+    }
+    em = new V86(o);
+    __saveRelay();
+    wire(em);
+  }).catch(function(e){
+    pwrState("error");
+    console.error("[I50] 启动失败：" + (e && e.message ? e.message : e));
+    console.error("[I50] 请确认 Fetch v86 runtime 与 Build FreeDOS disks 都已跑出绿勾。");
+  });
+}
+
+function wire(m){
+  running = true;
+  bootAt = Date.now(); ipsLast = 0; ipsTime = performance.now();
+  m.add_listener("emulator-ready", function(){ pwrState("ready"); fit(); });
+
+  m.add_listener("screen-set-size", function(a){
+    res.w=a[0]; res.h=a[1];
+    requestAnimationFrame(fit);
+    fit();
+  });
+
+  m.add_listener("download-progress", function(e){
+    var n=(e.file_name||"").split("/").pop();
+    if(/wasm$/i.test(n)) return;
+    say("载入 "+n+" "+(e.total?Math.round(e.loaded/e.total*100):0)+"%");
+  });
+  m.add_listener("download-error", function(e){
+    pwrState("error"); console.error(e);
+  });
+
+  function hdd(){ on(ledHdd,"on"); clearTimeout(hddTimer);
+    hddTimer=setTimeout(function(){ off(ledHdd,"on"); },90); }
+  m.add_listener("ide-read-start", hdd);
+  m.add_listener("ide-read-end",  hdd);
+  m.add_listener("ide-write-end", hdd);
+
+  function net(){ on(ledNet,"on"); clearTimeout(netTimer);
+    netTimer=setTimeout(function(){ off(ledNet,"on"); },90); }
+  m.add_listener("net0-send", net);
+  m.add_listener("eth-transmit-end", net);
+  m.add_listener("eth-receive-end", net);
+}
+
+/* ---------------- 关机 / 重启 ---------------- */
+function shutdown(){
+  if(em){
+    if(em.stop){ try{ em.stop(); }catch(e){} }
+    if(em.destroy){ try{ em.destroy(); }catch(e){} }
+  }
+  em=null; running=false;
+  pwrState("off"); off(ledHdd,"on"); off(ledNet,"on");
+  if(isFs()) exitFs();
+  setTimeout(function(){ offEl.classList.add("on"); }, 350);
+}
+function reset(){
+  offEl.classList.remove("on"); closeMenu();
+  if(em){ try{ em.destroy(); }catch(e){} em=null; running=false; }
+  boot();
+}
+
+/* ---------------- 全屏 ---------------- */
+function isFs(){ return !!(document.fullscreenElement||document.webkitFullscreenElement); }
+function goFs(){
+  if(em && em.screen_go_fullscreen){ try{ em.screen_go_fullscreen(); return; }catch(e){} }
+  var t=document.documentElement;
+  if(t.requestFullscreen) t.requestFullscreen();
+  else if(t.webkitRequestFullscreen) t.webkitRequestFullscreen();
+}
+function exitFs(){
+  if(document.exitFullscreen) document.exitFullscreen();
+  else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+}
+document.addEventListener("fullscreenchange", function(){ setTimeout(fit,220); });
+document.addEventListener("webkitfullscreenchange", function(){ setTimeout(fit,220); });
+
+/* ---------------- 键盘 ---------------- */
+var SC={esc:[0x01],tab:[0x0F],enter:[0x1C],backspace:[0x0E],ctrl:[0x1D],alt:[0x38],shift:[0x2A],
+ f1:[0x3B],f2:[0x3C],f3:[0x3D],f4:[0x3E],f5:[0x3F],f6:[0x40],f7:[0x41],f8:[0x42],
+ f9:[0x43],f10:[0x44],f11:[0x57],f12:[0x58],
+ home:[0xE0,0x47],end:[0xE0,0x4F],pgup:[0xE0,0x49],pgdn:[0xE0,0x51],del:[0xE0,0x53],
+ up:[0xE0,0x48],down:[0xE0,0x50],left:[0xE0,0x4B],right:[0xE0,0x4D]};
+function tap(c){
+  if(!em||!running) return;
+  em.keyboard_send_scancodes(c);
+  setTimeout(function(){
+    if(em&&running) em.keyboard_send_scancodes(c.map(function(x){return x===0xE0?0xE0:(x|0x80);}));
+  },25);
+}
+function text(s){
+  if(!em||!running||!s) return;
+  if(typeof em.keyboard_send_text==="function"){ em.keyboard_send_text(s); return; }
+  var out=[], m={" ":0x39,"\n":0x1C,".":0x34,"/":0x35,"-":0x0C,":":0x27};
+  for(var i=0;i<s.length;i++){
+    var ch=s[i];
+    if(m[ch]!==undefined) out.push(m[ch]);
+    else if(/[a-z]/.test(ch)) out.push(0x1E+ch.charCodeAt(0)-97);
+    else if(/[A-Z]/.test(ch)) out.push(0x2A,0x1E+ch.toLowerCase().charCodeAt(0)-97);
+    else if(/[0-9]/.test(ch)) out.push(ch==="0"?0x0B:0x02+ +ch-1);
+  }
+  if(out.length && running) em.keyboard_send_scancodes(out);
+}
+/* 在 DOS 里执行一条命令 */
+function runCmd(cmd){
+  if(!em||!running){ showHint("还没开机"); return; }
+  showHint("执行: " + cmd);
+  setTimeout(function(){ text(cmd); }, 60);
+  setTimeout(function(){ tap([0x1C]); }, 260);
+}
+var caps=false;
+
+/* ---------------- 鼠标 / 触摸 ---------------- */
+var last=null,t0=0,moved=0;
+function mouse(dx,dy,b){ if(em&&running&&em.mouse_send_event) em.mouse_send_event(dx,dy,b); }
+
+stage.addEventListener("touchstart",function(e){
+  kbd.focus({preventScroll:true});
+  var t=e.touches[0]; last={x:t.clientX,y:t.clientY}; t0=Date.now(); moved=0;
+},{passive:true});
+
+stage.addEventListener("touchmove",function(e){
+  if(e.touches.length!==1||!last) return;
+  var t=e.touches[0], dx=Math.round(t.clientX-last.x), dy=Math.round(t.clientY-last.y);
+  if(rot===90){ var tmp=dx; dx=-dy; dy=tmp; }
+  last={x:t.clientX,y:t.clientY}; moved+=Math.abs(dx)+Math.abs(dy);
+  mouse(dx,dy,0); e.preventDefault();
+},{passive:false});
+
+stage.addEventListener("touchend",function(e){
+  if(e.touches.length===0){
+    if(Date.now()-t0<250 && moved<12){ mouse(0,0,1); setTimeout(function(){mouse(0,0,0);},40); }
+    last=null;
+  }
+});
+
+stage.addEventListener("click",function(){
+  if(TOUCH){ kbd.focus({preventScroll:true}); return; }
+  if(em && !document.pointerLockElement && em.lock_mouse){
+    try{ em.lock_mouse(); showHint("鼠标已锁定，按 Esc 解锁"); }catch(err){}
+  }
+});
+document.addEventListener("pointerlockchange",function(){
+  if(document.pointerLockElement) showHint("鼠标已锁定 · Esc 解锁");
+});
+
+function applyZoom(){ applyTransform(); }
+
+/* ---------------- 菜单 ---------------- */
+function openMenu(){
+  // 若当前 relay 不是预设值，切到"自定义"并回填
+  var known = false;
+  for(var i=0;i<nicSel.options.length;i++){
+    if(nicSel.options[i].value === opt.relay){ known = true; break; }
+  }
+  nicSel.value = known ? opt.relay : "__custom__";
+  syncNicUI();
+  menuEl.classList.add("on");
+}
+function closeMenu(){ menuEl.classList.remove("on"); }
+menuEl.addEventListener("click",function(e){ if(e.target===menuEl) closeMenu(); });
+
+function nicNote(r){
+  if(r === "__custom__")
+    return "填你自己搭的服务器地址，如 wisp://192.168.1.5:1234 或 wisps://your-worker.workers.dev";
+  if(!r) return "网卡已拔出。";
+  if(r.indexOf("wisp") === 0)
+    return "全协议：网页(80)、BBS(23)、邮件(110/25)、IRC(6667) 都能用。公共节点，可能限速。";
+  if(r.indexOf("ws") === 0)
+    return "全协议：网页(80)、BBS(23)、邮件(110/25)、IRC(6667) 都能用。公共节点带宽较低（约 40KB/s）。";
+  return "自定义后端。";
+}
+function syncNicUI(){
+  var c = $("nic-custom");
+  if(nicSel.value === "__custom__"){
+    c.style.display = "block";
+    c.value = (opt.relay && opt.relay !== "__custom__" &&
+               /^(wisp|ws)s?:\/\//.test(opt.relay)) ? opt.relay : "";
+  }else{
+    c.style.display = "none";
+  }
+  $("nic-note").textContent = nicNote(nicSel.value);
+}
+nicSel.addEventListener("change",function(){
+  if(nicSel.value === "__custom__"){
+    syncNicUI(); $("nic-custom").focus(); return;   // 等用户填完再重启
+  }
+  opt.relay = nicSel.value;
+  syncNicUI(); closeMenu(); boot();
+});
+$("nic-custom").addEventListener("keydown",function(e){
+  if(e.key !== "Enter") return;
+  var v = (this.value || "").trim();
+  if(!v){ showHint("地址不能为空"); return; }
+  opt.relay = v;
+  closeMenu(); boot();
+});
+
+/* 记住上次的后端选择（同一台设备下次打开还用它） */
+try{
+  var saved = localStorage.getItem("v86-relay");
+  // 只接受 wisp:// wisps:// ws:// wss:// 这几种，其他一律回退默认
+  if(saved && /^(wisp|ws)s?:\/\/.+/.test(saved)) opt.relay = saved;
+}catch(e){}
+var __saveRelay = function(){
+  try{ localStorage.setItem("v86-relay", opt.relay || ""); }catch(e){}
+};
+
+function shot(){
+  if(!em||!em.screen_make_screenshot){ say("截图不可用"); return; }
+  try{
+    var img = em.screen_make_screenshot();
+    var a=document.createElement("a");
+    a.href = img.src || (img.toDataURL && img.toDataURL());
+    a.download="freedos.png"; a.click();
+    say("已截图");
+  }catch(err){ say("截图失败"); }
+}
+
+/* ---------------- 按钮 ---------------- */
+document.addEventListener("click",function(e){
+  var b=e.target.closest("button"); if(!b) return;
+
+  if(b.id==="power"){
+    if(running) openMenu();
+    else { offEl.classList.remove("on"); boot(); }
+    return;
+  }
+  if(b.dataset.cmd){ runCmd(b.dataset.cmd); return; }
+  if(b.dataset.key){ tap(SC[b.dataset.key]||[]); return; }
+
+  switch(b.dataset.act){
+    case "fs": isFs() ? exitFs() : goFs(); break;
+    case "menu": openMenu(); break;
+    case "on": offEl.classList.remove("on"); boot(); break;
+
+    case "cad": tap([0x1D]); tap([0x38]); tap([0xE0,0x53]); break;
+    case "caps": caps=!caps; b.classList.toggle("lit",caps); tap([0x3A]); break;
+    case "paste":
+      if(navigator.clipboard&&navigator.clipboard.readText)
+        navigator.clipboard.readText().then(text).catch(function(){ say("剪贴板被拒绝"); });
+      else say("浏览器不支持粘贴");
+      break;
+
+    case "m-reset": reset(); break;
+    case "m-cad": closeMenu(); tap([0x1D]); tap([0x38]); tap([0xE0,0x53]); break;
+    case "m-shot": closeMenu(); shot(); break;
+    case "rot":
+    case "m-rot":
+      rot = rot ? 0 : 90; fitMode=false; fit();
+      showHint(rot ? "屏幕已旋转 90°" : "屏幕已转正");
+      closeMenu(); break;
+    case "dock":
+      $("dock").classList.toggle("hide");
+      b.classList.toggle("lit", $("dock").classList.contains("hide"));
+      setTimeout(fit, 30); break;
+    case "m-scan": frame.classList.toggle("scan"); closeMenu(); break;
+    case "m-fit": fitMode=true; rot=0; fit(); closeMenu(); break;
+    case "m-off": closeMenu(); shutdown(); break;
+    case "m-close": closeMenu(); break;
+  }
+});
+
+/* ---------------- 起飞 ---------------- */
+// 先探测托管是否支持 HTTP Range，决定 C 盘是按需加载还是整盘下载
+fetch(HDA_URL,{method:"GET",headers:{Range:"bytes=0-0"}})
+  .then(function(r){ window.__rangeOK = (r.status === 206); })
+  .catch(function(){ window.__rangeOK = false; })
+  .then(boot);
+})();
+</script>
+</body>
+</html>
