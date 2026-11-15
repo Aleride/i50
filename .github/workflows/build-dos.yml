@@ -1,0 +1,987 @@
+name: Build FreeDOS disks (network + IRC + browser)
+
+# 网页手动触发：Actions → Build FreeDOS disks → Run workflow
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  # ==================== 欢迎页文字 ====================
+  # 开机画面只有下面这两行，没有任何多余提示。
+  #
+  # 格式：
+  #   1. "WELCOME: |" 这一行别动
+  #   2. 内容每行开头必须是【10 个空格】，YAML 靠缩进认行
+  #   3. 想让某行往里缩就多打空格，缩进会原样显示
+  #   4. 只能用英文和 ASCII 符号（DOS 显示不了中文）
+  #   5. 每行别超过 70 字符
+  #
+  # 想让两行分别贴在屏幕左右两端：在第一行后面补空格再接文字即可。
+  # 改完重新跑一次 workflow 就生效，页面文件不用动。
+  # =============================================================
+  WELCOME: |
+          Hi I50
+          A DOS Computer
+  # ==================== 预装 DOS 应用 ====================
+  # 一行一个软件包：目录名 | 要收的文件 | 下载地址(逗号分隔多个备用源)
+  # 同名目录会自动合并；全部自动加进 PATH 并写进 HELP。
+  # 下载失败只跳过这一行，日志打 !!，不影响系统构建。
+  # 每行开头至少 10 个空格；# 开头是注释。
+  # =============================================================
+  EXTRA: |
+          # -- 文件管理器：Volkov Commander 4.05 英文版 (97 KB) --
+          VC | VC.EXE VC.COM VC.HLP VC.CFG VC.INI | https://vc.vvv.kyiv.ua/download/vc405sw.zip,https://vc.vvv.kyiv.ua/download/vc49908a.zip
+          # DosZip：开源双面板文件管理器，作为 VC 的备用
+          VC | DOSZIP.EXE DOSZIP.HLP | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/apps/doszip.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/apps/doszip.zip
+          # -- 压缩工具 --
+          ZIP | PKZIP.EXE PKUNZIP.EXE ZIP.EXE UNZIP.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/pkzip.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/pkunzip.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/zip.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/unzip.zip
+          # -- 命令行增强（FreeDOS 官方 base 包）--
+          UTIL | DOSKEY.COM DOSKEY.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/doskey.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/base/doskey.zip
+          UTIL | MORE.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/more.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/more.zip
+          UTIL | EDIT.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/edit.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/edit.zip
+          UTIL | HELP.EXE FASTHELP.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/ambhelp.zip
+          # -- 鼠标驱动 --
+          MOUSE | CTMOUSE.EXE CTMOUSE.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/ctmouse.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/ctmouse.zip
+          # -- 汇编器 / 调试器 --
+          DEV | NASM.EXE NASM.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/devel/nasm.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/devel/nasm.zip
+          DEV | DEBUG.EXE DEBUG.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/debug.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/debug.zip
+          # -- BASIC 解释器（FreeDOS 1.4 未收录，多试几个源）--
+          BASIC | QBASIC.EXE QBASIC.HLP QB.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/devel/qbasic.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/devel/qbasic.zip
+          # -- MOD 音乐播放器 Trakblaster --
+          MUSIC | TRAKBLAST.EXE TBLAST.EXE PLAY.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/apps/trakblaster.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/apps/trakblaster.zip
+
+  # ==================== 保留哪些游戏 ====================
+  # 从 A: 软盘保留（软盘空间小，只放小游戏）
+  KEEP_FLOPPY_GAMES: "TETRIS.COM SNAKE.EXE MINESW~1.COM INVADERS.COM JUMPER.COM"
+  # 从 C: 硬盘保留（硬盘 16MB，空间充裕，可加 ROGUE.EXE 等）
+  KEEP_DISK_GAMES: "TETRIS.COM SNAKE.EXE MINESW~1.COM INVADERS.COM JUMPER.COM ROGUE.EXE"
+  # ==================== 硬盘大小（MB） ====================
+  DISK_MB: "16"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write builder scripts
+        run: |
+          mkdir -p /tmp/bld
+          cat > /tmp/bld/fat12rw.py <<'PYEOF'
+          #!/usr/bin/env python3
+          # -*- coding: utf-8 -*-
+          """FAT12 软盘镜像重建器：复用原镜像的引导扇区，重建 FAT 与根目录。
+          用于把 FreeDOS 启动盘瘦身 + 写入自定义 AUTOEXEC / 脚本。"""
+
+          import struct
+
+          class FAT12:
+              def __init__(self, boot_sector=None, bps=512, spc=2, reserved=1,
+                           nfats=2, root_ents=112, spf=3, total=1440):
+                  self.bps, self.spc = bps, spc
+                  self.reserved, self.nfats = reserved, nfats
+                  self.root_ents, self.spf, self.total = root_ents, spf, total
+
+                  self.fat_start = reserved * bps
+                  self.root_start = (reserved + nfats * spf) * bps
+                  self.data_start = self.root_start + root_ents * 32
+                  self.clusters = (total * bps - self.data_start) // (spc * bps)
+
+                  self.fat = [0] * (self.clusters + 2)
+                  self.fat[0] = 0xFF0
+                  self.fat[1] = 0xFFF
+                  self.buf = bytearray(total * bps)
+                  if boot_sector:
+                      self.buf[0:512] = boot_sector
+                  self.root = bytearray(root_ents * 32)
+                  self.dirs = {"": {"buf": self.root, "cluster": 0}}
+
+              # ---- FAT 12 位项 ----
+              def _write_fat(self):
+                  fb = bytearray(self.spf * self.bps)
+                  for n in range(len(self.fat)):
+                      v = self.fat[n] & 0xFFF
+                      o = n + n // 2
+                      if n % 2 == 0:
+                          fb[o] = v & 0xFF
+                          fb[o + 1] = (fb[o + 1] & 0xF0) | ((v >> 8) & 0x0F)
+                      else:
+                          fb[o] = (fb[o] & 0x0F) | ((v & 0x0F) << 4)
+                          fb[o + 1] = (v >> 4) & 0xFF
+                  for f in range(self.nfats):
+                      s = self.fat_start + f * self.spf * self.bps
+                      self.buf[s:s + len(fb)] = fb
+
+              def _alloc(self, n):
+                  chain = []
+                  for c in range(2, len(self.fat)):
+                      if self.fat[c] == 0:
+                          chain.append(c)
+                          if len(chain) == n:
+                              break
+                  if len(chain) < n:
+                      raise IOError("软盘空间不足：需要 %d 簇，可用 %d 簇" % (n, len(chain)))
+                  for i in range(n - 1):
+                      self.fat[chain[i]] = chain[i + 1]
+                  self.fat[chain[n - 1]] = 0xFFF
+                  return chain
+
+              def _cluster_off(self, c):
+                  return self.data_start + (c - 2) * self.spc * self.bps
+
+              # ---- 目录 ----
+              def _free_slot(self, buf):
+                  for i in range(len(buf) // 32):
+                      if buf[i * 32] in (0, 0xE5):
+                          return i
+                  return None
+
+              def _entries(self, buf):
+                  out = []
+                  for i in range(len(buf) // 32):
+                      e = buf[i * 32:(i + 1) * 32]
+                      if e[0] == 0:
+                          break
+                      if e[0] == 0xE5 or (e[11] & 0x0F) == 0x0F:
+                          continue
+                      nm = e[0:8].decode("ascii", "replace").rstrip()
+                      ex = e[8:11].decode("ascii", "replace").rstrip()
+                      out.append((nm + ("." + ex if ex else ""), i))
+                  return out
+
+              def mkdir(self, path):
+                  parts = [p for p in path.replace("\\", "/").split("/") if p]
+                  cur, pc = "", 0
+                  for p in parts:
+                      nxt = (cur + "/" + p).lstrip("/")
+                      if nxt in self.dirs:
+                          pc = self.dirs[nxt]["cluster"]; cur = nxt; continue
+                      buf = self.dirs[cur]["buf"]
+                      idx = self._free_slot(buf)
+                      if idx is None:
+                          raise IOError("目录已满: " + (cur or "/"))
+                      cl = self._alloc(1)[0]
+                      e = bytearray(32)
+                      e[0:11] = (p.upper() + " " * 11)[:11].encode("ascii")
+                      e[11] = 0x10
+                      struct.pack_into("<H", e, 26, cl)
+                      buf[idx * 32:(idx + 1) * 32] = e
+                      sub = bytearray(self.spc * self.bps)
+                      dot = bytearray(32); dot[0:11] = b".          "; dot[11] = 0x10
+                      struct.pack_into("<H", dot, 26, cl); sub[0:32] = dot
+                      dd = bytearray(32); dd[0:11] = b"..         "; dd[11] = 0x10
+                      struct.pack_into("<H", dd, 26, pc); sub[32:64] = dd
+                      self.dirs[nxt] = {"buf": sub, "cluster": cl}
+                      pc = cl; cur = nxt
+                  return self.dirs[cur]
+
+              def add_file(self, path, data):
+                  parts = [p for p in path.replace("\\", "/").split("/") if p]
+                  fname = parts[-1]
+                  if len(parts) > 1:
+                      self.mkdir("/".join(parts[:-1]))
+                  cur = "/".join(parts[:-1])
+                  buf = self.dirs[cur]["buf"]
+                  idx = self._free_slot(buf)
+                  if idx is None:
+                      raise IOError("目录已满: " + (cur or "/"))
+                  size = len(data)
+                  n = max(1, (size + self.spc * self.bps - 1) // (self.spc * self.bps))
+                  chain = self._alloc(n)
+                  for i, c in enumerate(chain):
+                      chunk = bytearray(data[i * self.spc * self.bps:(i + 1) * self.spc * self.bps])
+                      chunk += bytearray(self.spc * self.bps - len(chunk))
+                      off = self._cluster_off(c)
+                      self.buf[off:off + len(chunk)] = chunk
+                  nm, _, ex = fname.partition(".")
+                  e = bytearray(32)
+                  e[0:8] = (nm.upper() + " " * 8)[:8].encode("ascii")
+                  e[8:11] = (ex.upper() + "   ")[:3].encode("ascii")
+                  e[11] = 0x20
+                  struct.pack_into("<H", e, 26, chain[0])
+                  struct.pack_into("<I", e, 28, size)
+                  buf[idx * 32:(idx + 1) * 32] = e
+                  return True
+
+              def free_clusters(self):
+                  return sum(1 for c in range(2, len(self.fat)) if self.fat[c] == 0)
+
+              def save(self, path):
+                  self._write_fat()
+                  off = self.root_start
+                  self.buf[off:off + len(self.root)] = self.root
+                  for p, d in self.dirs.items():
+                      if p == "" or not d["cluster"]:
+                          continue
+                      o = self._cluster_off(d["cluster"])
+                      self.buf[o:o + len(d["buf"])] = d["buf"]
+                  with open(path, "wb") as f:
+                      f.write(self.buf)
+                  import os
+                  return os.path.getsize(path)
+
+
+          def read_fat12(path):
+              """读取现有 FAT12 镜像，返回 (boot_sector, 参数, 文件字典)"""
+              d = open(path, "rb").read()
+              bps = struct.unpack("<H", d[11:13])[0]
+              spc = d[13]
+              reserved = struct.unpack("<H", d[14:16])[0]
+              nfats = d[16]
+              root_ents = struct.unpack("<H", d[17:19])[0]
+              spf = struct.unpack("<H", d[22:24])[0]
+              total = struct.unpack("<H", d[19:21])[0] or struct.unpack("<I", d[32:36])[0]
+              params = dict(bps=bps, spc=spc, reserved=reserved, nfats=nfats,
+                            root_ents=root_ents, spf=spf, total=total)
+
+              fat_start = reserved * bps
+              root_start = (reserved + nfats * spf) * bps
+              data_start = root_start + root_ents * 32
+
+              def fe(n):
+                  o = fat_start + n + n // 2
+                  v = struct.unpack("<H", d[o:o + 2])[0]
+                  return (v >> 4) if (n & 1) else (v & 0xFFF)
+
+              def chain(c):
+                  out = []
+                  while 2 <= c < 0xFF0:
+                      out.append(c)
+                      c = fe(c)
+                  return out
+
+              def read(buf_off):
+                  files = []
+                  for i in range(root_ents):
+                      e = d[buf_off + i * 32: buf_off + i * 32 + 32]
+                      if e[0] == 0:
+                          break
+                      if e[0] == 0xE5 or (e[11] & 0x0F) == 0x0F:
+                          continue
+                      nm = e[0:8].decode("ascii", "replace").rstrip()
+                      ex = e[8:11].decode("ascii", "replace").rstrip()
+                      name = nm + ("." + ex if ex else "")
+                      if name in (".", ".."):
+                          continue
+                      sz = struct.unpack("<I", e[28:32])[0]
+                      cl = struct.unpack("<H", e[26:28])[0]
+                      if e[11] & 0x10:
+                          sub = data_start + (cl - 2) * spc * bps
+                          for f in read(sub):
+                              files.append((name + "/" + f[0], f[1]))
+                      else:
+                          data = b""
+                          for c in chain(cl):
+                              o = data_start + (c - 2) * spc * bps
+                              data += d[o:o + spc * bps]
+                          files.append((name, data[:sz]))
+                  return files
+
+              return d[:512], params, dict(read(root_start))
+          PYEOF
+          cat > /tmp/bld/fat16.py <<'PYEOF'
+          #!/usr/bin/env python3
+          # -*- coding: utf-8 -*-
+          """最小 FAT16 镜像构建器：创建带 MBR 的硬盘镜像并写入目录/文件。
+          不依赖 mtools，纯标准库，便于在任意环境（含 GitHub Actions）运行。"""
+
+          import struct, os
+
+          class FAT16Image:
+              """带 MBR 的 FAT16 镜像。目录内容在内存中维护，save() 时写回。"""
+
+              def __init__(self, size_mb=32, label="FREEDOS"):
+                  self.sec = 512
+                  self.spc = 4                       # 2KB 簇
+                  self.reserved = 4
+                  self.root_ents = 512
+                  self.num_fats = 2
+                  self.hidden = 2048                 # 分区起点 LBA
+                  self.total = size_mb * 1024 * 1024 // self.sec
+
+                  root_sec = (self.root_ents * 32 + self.sec - 1) // self.sec
+                  fat_sz = 64
+                  for _ in range(30):
+                      data = self.total - self.reserved - root_sec - self.num_fats * fat_sz
+                      clusters = data // self.spc
+                      nf = max(1, (clusters * 2 + self.sec - 1) // self.sec)
+                      if nf == fat_sz:
+                          break
+                      fat_sz = nf
+                  self.fat_sz = fat_sz
+                  self.root_sec = root_sec
+                  self.data_start = self.reserved + self.num_fats * fat_sz + root_sec
+                  self.clusters = (self.total - self.data_start) // self.spc
+
+                  self.fat = [0] * (self.clusters + 2)
+                  self.fat[0] = 0xFFF8
+                  self.fat[1] = 0xFFFF
+                  self.buf = bytearray((self.hidden + self.total) * self.sec)
+
+                  self.root = bytearray(self.root_sec * self.sec)
+                  self.dirs = {"": {"buf": self.root, "cluster": 0}}   # 路径 -> 目录
+
+                  self._write_mbr()
+                  self._write_bpb(label)
+
+              # ---------------- 底层 ----------------
+              def _pwrite(self, lba, data):
+                  off = lba * self.sec
+                  self.buf[off:off + len(data)] = data
+
+              def _write_mbr(self):
+                  m = bytearray(512)
+                  m[0], m[1], m[2] = 0xFA, 0xEB, 0xFD
+                  heads, spt = 16, 63
+                  end = self.hidden + self.total
+                  c_end = min(1023, end // (heads * spt))
+                  h_end = min(15, (end // spt) % heads)
+                  s_end = max(1, end % spt)
+                  pe = bytearray(16)
+                  pe[0] = 0x80
+                  pe[1], pe[2], pe[3] = 0, 1, 1
+                  pe[4] = 0x0E                                    # FAT16 (LBA)
+                  pe[5] = h_end
+                  pe[6] = (s_end & 0x3F) | ((c_end >> 2) & 0xC0)
+                  pe[7] = c_end & 0xFF
+                  struct.pack_into("<I", pe, 8, self.hidden)
+                  struct.pack_into("<I", pe, 12, self.total)
+                  m[446:462] = pe
+                  m[510], m[511] = 0x55, 0xAA
+                  self._pwrite(0, m)
+
+              def _write_bpb(self, label):
+                  b = bytearray(512)
+                  b[0:3] = b"\xEB\x3C\x90"
+                  b[3:11] = b"MSDOS5.0"
+                  struct.pack_into("<H", b, 11, self.sec)
+                  b[13] = self.spc
+                  struct.pack_into("<H", b, 14, self.reserved)
+                  b[16] = self.num_fats
+                  struct.pack_into("<H", b, 17, self.root_ents)
+                  struct.pack_into("<H", b, 19, 0)
+                  b[21] = 0xF8
+                  struct.pack_into("<H", b, 22, self.fat_sz)
+                  struct.pack_into("<H", b, 24, 63)
+                  struct.pack_into("<H", b, 26, 16)
+                  struct.pack_into("<I", b, 28, self.hidden)
+                  struct.pack_into("<I", b, 32, self.total)
+                  b[36] = 0x80
+                  b[38] = 0x29
+                  struct.pack_into("<I", b, 39, 0x12345678)
+                  b[43:54] = (label.upper() + " " * 11)[:11].encode("ascii")
+                  b[54:62] = b"FAT16   "
+                  b[510], b[511] = 0x55, 0xAA
+                  self._pwrite(self.hidden, b)
+
+              def _write_fat(self):
+                  fb = bytearray(self.fat_sz * self.sec)
+                  for i, v in enumerate(self.fat):
+                      struct.pack_into("<H", fb, i * 2, v & 0xFFFF)
+                  base = self.hidden + self.reserved
+                  for n in range(self.num_fats):
+                      self._pwrite(base + n * self.fat_sz, fb)
+
+              def _alloc(self, n):
+                  chain = []
+                  for c in range(2, len(self.fat)):
+                      if self.fat[c] == 0:
+                          chain.append(c)
+                          if len(chain) == n:
+                              break
+                  if len(chain) < n:
+                      raise IOError("空间不足：需要 %d 簇，可用 %d 簇" % (n, len(chain)))
+                  for i in range(n - 1):
+                      self.fat[chain[i]] = chain[i + 1]
+                  self.fat[chain[n - 1]] = 0xFFFF
+                  return chain
+
+              def _cluster_lba(self, c):
+                  return self.hidden + self.data_start + (c - 2) * self.spc
+
+              # ---------------- 目录 ----------------
+              def _entries(self, buf):
+                  out = []
+                  for i in range(len(buf) // 32):
+                      e = buf[i * 32:(i + 1) * 32]
+                      if e[0] == 0:
+                          break
+                      if e[0] == 0xE5 or (e[11] & 0x0F) == 0x0F:
+                          continue
+                      nm = e[0:8].decode("ascii", "replace").rstrip()
+                      ex = e[8:11].decode("ascii", "replace").rstrip()
+                      out.append((nm + ("." + ex if ex else ""), i, e))
+                  return out
+
+              def _free_slot(self, buf):
+                  for i in range(len(buf) // 32):
+                      if buf[i * 32] in (0, 0xE5):
+                          return i
+                  return None
+
+              def mkdir(self, path):
+                  parts = [p for p in path.replace("\\", "/").split("/") if p]
+                  cur = ""
+                  parent_cluster = 0
+                  for p in parts:
+                      nxt = (cur + "/" + p).lstrip("/")
+                      if nxt in self.dirs:
+                          parent_cluster = self.dirs[nxt]["cluster"]
+                          cur = nxt
+                          continue
+                      buf = self.dirs[cur]["buf"]
+                      found = None
+                      for name, idx, e in self._entries(buf):
+                          if name.upper() == p.upper():
+                              found = (idx, e)
+                              break
+                      if found:
+                          idx, e = found
+                          cl = struct.unpack("<H", e[26:28])[0]
+                          self.dirs[nxt] = {"buf": bytearray(self.spc * self.sec), "cluster": cl}
+                      else:
+                          idx = self._free_slot(buf)
+                          if idx is None:
+                              raise IOError("目录已满: " + (cur or "/"))
+                          cl = self._alloc(1)[0]
+                          e = bytearray(32)
+                          e[0:11] = (p.upper() + " " * 11)[:11].encode("ascii")
+                          e[11] = 0x10
+                          struct.pack_into("<H", e, 26, cl)
+                          buf[idx * 32:(idx + 1) * 32] = e
+                          sub = bytearray(self.spc * self.sec)
+                          dot = bytearray(32)
+                          dot[0:11] = b".          "
+                          dot[11] = 0x10
+                          struct.pack_into("<H", dot, 26, cl)
+                          sub[0:32] = dot
+                          dotdot = bytearray(32)
+                          dotdot[0:11] = b"..         "
+                          dotdot[11] = 0x10
+                          struct.pack_into("<H", dotdot, 26, parent_cluster)
+                          sub[32:64] = dotdot
+                          self.dirs[nxt] = {"buf": sub, "cluster": cl}
+                      parent_cluster = self.dirs[nxt]["cluster"]
+                      cur = nxt
+                  return self.dirs[cur]
+
+              def add_file(self, path, data):
+                  parts = [p for p in path.replace("\\", "/").split("/") if p]
+                  if not parts:
+                      raise ValueError("路径为空")
+                  fname = parts[-1]
+                  if len(parts) > 1:
+                      self.mkdir("/".join(parts[:-1]))
+                  cur = "/".join(parts[:-1])
+                  buf = self.dirs[cur]["buf"]
+                  idx = self._free_slot(buf)
+                  if idx is None:
+                      raise IOError("目录已满: " + (cur or "/"))
+                  size = len(data)
+                  n = max(1, (size + self.spc * self.sec - 1) // (self.spc * self.sec))
+                  chain = self._alloc(n)
+                  for i, c in enumerate(chain):
+                      chunk = bytearray(data[i * self.spc * self.sec:(i + 1) * self.spc * self.sec])
+                      chunk += bytearray(self.spc * self.sec - len(chunk))
+                      self._pwrite(self._cluster_lba(c), chunk)
+                  nm, _, ex = fname.partition(".")
+                  e = bytearray(32)
+                  e[0:8] = (nm.upper() + " " * 8)[:8].encode("ascii")
+                  e[8:11] = (ex.upper() + "   ")[:3].encode("ascii")
+                  e[11] = 0x20
+                  struct.pack_into("<H", e, 26, chain[0])
+                  struct.pack_into("<I", e, 28, size)
+                  buf[idx * 32:(idx + 1) * 32] = e
+                  return True
+
+              def free_clusters(self):
+                  return sum(1 for c in range(2, len(self.fat)) if self.fat[c] == 0)
+
+              def save(self, path):
+                  self._write_fat()
+                  for p, d in self.dirs.items():
+                      if p == "":
+                          continue
+                      if d["cluster"]:
+                          self._pwrite(self._cluster_lba(d["cluster"]), d["buf"])
+                  self._pwrite(self.hidden + self.reserved + self.num_fats * self.fat_sz, self.root)
+                  os.makedirs(os.path.dirname(os.path.abspath(path)) or ".", exist_ok=True)
+                  with open(path, "wb") as f:
+                      f.write(self.buf)
+                  return os.path.getsize(path)
+          PYEOF
+          echo "builder ready"
+          ls -l /tmp/bld/
+
+      - name: Download software
+        run: |
+          mkdir -p /tmp/bld/in
+          UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+          dl () {  # dl <目标文件> <最小字节> <url...>
+            dest="$1"; min="$2"; shift 2
+            for u in "$@"; do
+              echo "  尝试 $u"
+              if curl -sSfL --retry 4 --retry-delay 3 --max-time 180 -A "$UA" -o "$dest" "$u"; then
+                sz=$(stat -c%s "$dest" 2>/dev/null || echo 0)
+                if [ "$sz" -ge "$min" ]; then echo "  OK $sz 字节"; return 0; fi
+                echo "  太小($sz)，丢弃"
+              fi
+            done
+            echo "  全部失败"; rm -f "$dest"; return 1
+          }
+
+          echo "=== 基础镜像 ==="
+          dl /tmp/bld/in/base.img 500000 \
+            "https://raw.githubusercontent.com/copy/images/master/freedos722.img" \
+            "https://cdn.jsdelivr.net/gh/copy/images@master/freedos722.img" \
+            "https://github.com/copy/images/raw/master/freedos722.img" || exit 1
+
+          echo "=== 网卡驱动 (Crynwr packet driver) ==="
+          dl /tmp/bld/in/crynwr.zip 20000 \
+            "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/distributions/1.1/repos/net/crynwr.zip" \
+            "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/distributions/1.0/repos/net/crynwr.zip" \
+            "http://www.crynwr.com/drivers/crynwr.zip" || echo "!! 网卡驱动未获得"
+
+          echo "=== mTCP (TCP/IP 工具集: DHCP/HTGET/TELNET/NC/IRCJR/PING/FTP/SNTP) ==="
+          dl /tmp/bld/in/mtcp.zip 30000 \
+            "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/net/mtcp/20250316.0/mtcp.zip" \
+            "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/html/en/net/mtcp/20250316.0/mtcp.zip" \
+            "https://www.brutman.com/mTCP/mTCP_2024-01-21.zip" \
+            "https://www.brutman.com/mTCP/mTCP_2023-05-31.zip" || echo "!! mTCP 未获得"
+
+          echo "=== 浏览器 Bobcat (16位文本浏览器) ==="
+          dl /tmp/bld/in/bobcat.zip 30000 \
+            "https://www.brutman.com/Bobcat/bobcat.zip" \
+            "https://www.brutman.com/Bobcat/bobcat100.zip" \
+            "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/net/bobcat/bobcat.zip" \
+            "https://www.bttr-software.de/downloads/bobcat.zip" \
+            "http://www.brutman.com/Bobcat/bobcat.zip" || echo "!! Bobcat 未获得（菜单会自动改用 HTGET）"
+
+      - name: Build disks
+        run: |
+          cat > /tmp/bld/build.py <<'PYEOF'
+          #!/usr/bin/env python3
+          # -*- coding: utf-8 -*-
+          """组装 FreeDOS 双盘：A: 启动软盘（含欢迎文字）+ C: 程序硬盘（网络/IRC/浏览器/游戏）"""
+          import os, re, sys, zipfile, glob, shutil, subprocess, urllib.request, urllib.error
+
+          sys.path.insert(0, "/tmp/bld")
+          from fat12rw import read_fat12, FAT12
+          from fat16 import FAT16Image
+
+          IN  = "/tmp/bld/in"
+          OUT = os.getcwd()
+          MB  = int(os.environ.get("DISK_MB", "16"))
+
+          def log(m): print(m, flush=True)
+          def sh(c):
+              r = subprocess.run(c, shell=True, capture_output=True, text=True)
+              if r.stdout.strip(): print("   " + r.stdout.strip()[:300].replace("\n", "\n   "))
+              return r.returncode == 0
+
+          # ---------- 解压 ----------
+          def unzip(src, dest):
+              try:
+                  os.makedirs(dest, exist_ok=True)
+                  with zipfile.ZipFile(src) as z:
+                      z.extractall(dest)
+                  return True
+              except Exception as e:
+                  log("  解压失败 %s (%s)" % (os.path.basename(src), str(e)[:90]))
+                  return False
+
+          pkg = {}
+          for name in ("crynwr", "mtcp", "bobcat"):
+              p = os.path.join(IN, name + ".zip")
+              if os.path.exists(p):
+                  pkg[name] = os.path.join(IN, name) if unzip(p, os.path.join(IN, name)) else None
+              else:
+                  pkg[name] = None
+          log("可用软件包: " + ", ".join(k for k, v in pkg.items() if v) or "可用软件包: 无")
+
+          # ---------- 收集程序 ----------
+          def find(root, name):
+              if not root: return None
+              for d, _, fs in os.walk(root):
+                  for f in fs:
+                      if f.upper() == name.upper():
+                          return os.path.join(d, f)
+              return None
+
+          def find_any(root, *names):
+              for n in names:
+                  p = find(root, n)
+                  if p: return p
+              return None
+
+          def find_glob(root, *pats):
+              if not root: return None
+              for p in pats:
+                  hits = [x for x in glob.glob(os.path.join(root, "**", p), recursive=True) if os.path.isfile(x)]
+                  if hits:
+                      hits.sort(key=lambda x: len(x))
+                      return hits[0]
+              return None
+
+          tools = {}   # 目标名 -> 本地路径
+
+          # 网卡驱动
+          p = find_any(pkg["crynwr"], "NE2000.COM", "NE2000.EXE", "NE2000.DOS") \
+              or find_glob(pkg["crynwr"], "NE2000*.CO[ME]", "NE2*.COM", "*NE2000*")
+          if p: tools["NE2000.COM"] = p
+
+          # mTCP 应用
+          for exe in ["DHCP.EXE", "HTGET.EXE", "TELNET.EXE", "NC.EXE", "IRCJR.EXE",
+                      "PING.EXE", "FTP.EXE", "SNTP.EXE", "DNS.EXE", "TELPASS.EXE"]:
+              p = find(pkg["mtcp"], exe)
+              if p: tools[exe] = p
+          # 配置文件
+          p = find(pkg["mtcp"], "MTCP.CFG")
+          if p: tools["MTCP.CFG"] = p
+
+          # 浏览器
+          browsers = {}
+          # 浏览器固定为 Bobcat：16 位文本浏览器，实模式可跑、无需 DPMI、
+          # 在 80x25 的 DOS 屏和手机上都好读
+          p = find_any(pkg["bobcat"], "BOBCAT.EXE", "BOBCAT.COM") \
+              or find_glob(pkg["bobcat"], "BOBCAT*.EXE", "BOBCAT*.COM")
+          if p: browsers["BOBCAT.EXE"] = p
+
+          log("网络工具: " + (", ".join(sorted(tools)) or "无"))
+          log("浏览器:   " + (", ".join(sorted(browsers)) or "无"))
+
+          # ---------- 硬盘 C: ----------
+          # ---------- 可选额外软件（EXTRA） ----------
+          # 格式：每行  目录名 | 需要的文件(可空) | URL1,URL2,...
+          # 下不到就跳过，绝不影响主构建
+          EXTRA_DIRS = []
+          def fetch_extra():
+              spec = os.environ.get("EXTRA", "")
+              for ln in spec.split("\n"):
+                  ln = ln.strip()
+                  if not ln or ln.startswith("#"):
+                      continue
+                  parts = [x.strip() for x in ln.split("|")]
+                  if len(parts) < 3:
+                      log("  !! EXTRA 行格式不对，跳过: " + ln[:70]); continue
+                  folder, wanted, urls = parts[0], parts[1], [u.strip() for u in parts[2].split(",") if u.strip()]
+                  folder = re.sub(r"[^A-Za-z0-9_]", "", folder)[:8].upper() or "UTIL"
+                  want = set(w.upper() for w in wanted.split()) if wanted else None
+                  buf = None
+                  for u in urls:
+                      try:
+                          req = urllib.request.Request(u, headers={"User-Agent":
+                              "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36"})
+                          with urllib.request.urlopen(req, timeout=90) as r:
+                              buf = r.read(8 * 1024 * 1024)
+                          if len(buf) > 1000:
+                              log("  EXTRA 下载成功 %s (%d 字节)" % (u.split("/")[-1][:40], len(buf)))
+                              break
+                          buf = None
+                      except Exception as e:
+                          log("  EXTRA 源失败 %s (%s)" % (u[:55], str(e)[:55]))
+                  if not buf:
+                      log("  !! EXTRA [%s] 全部源失败，已跳过" % folder); continue
+
+                  files = {}
+                  try:
+                      import io as _io
+                      with zipfile.ZipFile(_io.BytesIO(buf)) as z:
+                          for n in z.namelist():
+                              if n.endswith("/"): continue
+                              base = os.path.basename(n).upper()
+                              if not base or "." not in base: continue
+                              if base.split(".")[-1] not in ("EXE","COM","BAT","CFG","TXT","DOC","HLP","DAT","BAS","ASM","SYS","OVL"):
+                                  continue
+                              if want and base not in want: continue
+                              try: files[base] = z.read(n)[:2*1024*1024]
+                              except Exception: pass
+                  except Exception:
+                      base = (urls[0].split("/")[-1].split("?")[0] or "TOOL.EXE").upper()
+                      if "." in base: files[base] = buf[:2*1024*1024]
+                  if not files:
+                      log("  !! EXTRA [%s] 包里没找到可用文件，跳过" % folder); continue
+                  EXTRA_DIRS.append((folder, files))
+
+          fetch_extra()
+
+          # EXTRA 允许同一个目录写多行（一个软件包一行），这里合并
+          extra_merged = {}
+          for _f, _files in EXTRA_DIRS:
+              extra_merged.setdefault(_f, {}).update(_files)
+          for _f in sorted(extra_merged):
+              log("  EXTRA 目录 C:\\%s : %d 个文件" % (_f, len(extra_merged[_f])))
+
+          log("\n[1/3] 构建程序硬盘 C: (%d MB)" % MB)
+          disk = FAT16Image(size_mb=MB, label="FREEDOS")
+          disk.mkdir("NET")
+          for name, src in sorted(tools.items()):
+              with open(src, "rb") as f:
+                  disk.add_file("NET/" + name, f.read())
+              log("  + C:\\NET\\%s (%d 字节)" % (name, os.path.getsize(src)))
+
+          if "MTCP.CFG" not in tools:
+              disk.add_file("NET/MTCP.CFG", b"PACKETINT 0x60\r\n")
+
+          # 浏览器
+          for name, src in sorted(browsers.items()):
+              with open(src, "rb") as f:
+                  disk.add_file("WEB/" + name, f.read())
+              log("  + C:\\WEB\\%s (%d 字节)" % (name, os.path.getsize(src)))
+
+          # 游戏放硬盘
+          boot_files = {}
+          base = os.path.join(IN, "base.img")
+          boot, params, orig = read_fat12(base)
+          keep_disk = set(os.environ.get("KEEP_DISK_GAMES", "").split())
+          for k, v in orig.items():
+              if k.startswith("GAMES/") and k.split("/")[-1] in keep_disk:
+                  disk.add_file(k, v)
+                  log("  + C:\\%s (%d 字节)" % (k.replace("/", "\\"), len(v)))
+
+          for folder, files in sorted(extra_merged.items()):
+              disk.mkdir(folder)
+              for nm, dt in sorted(files.items()):
+                  try:
+                      disk.add_file(folder + "/" + nm, dt)
+                      log("  + C:\\%s\\%s (%d 字节)" % (folder, nm, len(dt)))
+                  except Exception as e:
+                      log("  !! 放不进 %s (%s)" % (nm, str(e)[:50]))
+
+          # 使用说明
+          disk.add_file("NET/README.TXT", ("\r\n".join([
+              "C:\\NET  - networking tools",
+              "  NE2000.COM  packet driver for the emulated NIC",
+              "  DHCP.EXE    get an IP address",
+              "  HTGET.EXE   fetch a web page (HTTP port 80 only)",
+              "  TELNET.EXE  connect to a BBS (port 23)",
+              "  NC.EXE      netcat - raw TCP, use for POP3(110)/SMTP(25)",
+              "  IRCJR.EXE   IRC client (needs port 6667)",
+              "  PING/FTP/SNTP/DNS - as named",
+              "",
+              "C:\\WEB   - BOBCAT.EXE, a text-mode web browser",
+              "          HTTP only (port 80).",
+              "          Load the packet driver first (run NET).",
+              "",
+              "NOTE: Run NET.BAT before using any network tool.",
+              "      Press F1 or type HELP for the command list.",
+              "",
+          ])).encode("ascii"))
+          disk.save(os.path.join(OUT, "freedos-disk.img"))
+          log("  硬盘完成，剩余 %d KB" % (disk.free_clusters() * 2048 // 1024))
+
+          # ---------- 软盘 A: ----------
+          log("\n[2/3] 构建启动软盘 A: (720 KB)")
+          keep_floppy = set(os.environ.get("KEEP_FLOPPY_GAMES", "").split())
+          floppy = FAT12(boot_sector=boot, **params)
+          KEEP = ["KERNEL.SYS", "COMMAND.COM", "CONFIG.SYS", "FDOS/HIMEM.EXE", "FDOS/EDIT.EXE",
+                  "FDOS/ATTRIB.COM", "FDOS/XCOPY.EXE"]
+          for k in KEEP:
+              if k in orig:
+                  floppy.add_file(k, orig[k])
+              else:
+                  log("  (缺 %s，跳过)" % k)
+          for k, v in orig.items():
+              if k.startswith("GAMES/") and k.split("/")[-1] in keep_floppy:
+                  floppy.add_file(k, v)
+                  log("  + A:\\%s" % k.replace("/", "\\"))
+
+          # ---------- 脚本 ----------
+          log("\n[3/3] 生成启动脚本")
+          welcome = os.environ.get("WELCOME", "Hi I50")
+          lines = [l.rstrip() for l in welcome.split("\n")]
+          # 去掉首尾空行
+          while lines and not lines[0].strip(): lines.pop(0)
+          while lines and not lines[-1].strip(): lines.pop()
+          if not lines: lines = ["Hi I50"]
+
+          # 欢迎文字存成文件再用 TYPE 显示：
+          # 这样 ==== 之类的符号不会被 DOS 的 echo 命令吃掉
+          floppy.add_file("WELCOME.TXT", ("\r\n".join(lines) + "\r\n").encode("ascii"))
+          auto = ["@echo off",
+                  "set PATH=C:\\NET;C:\\WEB;" +
+                  "".join("C:\\%s;" % d for d in sorted(extra_merged)) +
+                  "A:\\FDOS;A:\\GAMES",
+                  "set MTCPCFG=C:\\NET\\MTCP.CFG",
+                  "set TEMP=C:\\",
+                  "set TMP=C:\\",
+                  "cls",
+                  "type A:\\WELCOME.TXT",
+                  ]
+          floppy.add_file("AUTOEXEC.BAT", ("\r\n".join(auto) + "\r\n").encode("ascii"))
+          log("  欢迎页 %d 行" % len(lines))
+
+          has = lambda n: n in tools
+
+          # NET.BAT
+          net = ["@echo off",
+                 "set MTCPCFG=C:\\NET\\MTCP.CFG",
+                 "if not exist C:\\NET\\NE2000.COM goto NODRV",
+                 "C:\\NET\\NE2000.COM 0x60 10 0x300",
+                 "goto DHCP",
+                 ":NODRV",
+                 "echo NE2000 packet driver missing.",
+                 "goto END",
+                 ":DHCP",
+                 "if not exist C:\\NET\\DHCP.EXE goto NODHCP",
+                 "C:\\NET\\DHCP.EXE",
+                 "goto END",
+                 ":NODHCP",
+                 "echo DHCP.EXE missing.",
+                 ":END"]
+          floppy.add_file("NET.BAT", ("\r\n".join(net) + "\r\n").encode("ascii"))
+
+          # MENU.BAT —— 只列出真实存在的程序
+          menu = ["@echo off", ":TOP", "set MTCPCFG=C:\\NET\\MTCP.CFG", "cls",
+                  "echo  ------------------------------------------",
+                  "echo    FreeDOS Network Terminal",
+                  "echo  ------------------------------------------"]
+          opts = []
+          n = 0
+          def add(label, target):
+              global n
+              n += 1
+              menu.append("echo    %d) %s" % (n, label))
+              opts.append((str(n), target))
+
+          add("Connect to network (DHCP)", "NETRUN")
+          if has("HTGET.EXE"):  add("Browse web page (HTGET)", "WEB")
+          if has("TELNET.EXE"): add("BBS via Telnet (port 23)", "BBS")
+          if has("NC.EXE"):     add("Mail via POP3/SMTP (NC)", "MAIL")
+          if has("IRCJR.EXE"):  add("IRC chat (port 6667)", "IRC")
+          if has("PING.EXE"):   add("Ping a host", "PING")
+          if has("FTP.EXE"):    add("FTP file transfer", "FTP")
+          if browsers:          add("Web browser (Bobcat)", "BROWSER")
+          add("Help - full command list", "HELPTXT")
+          add("List games", "GAMES")
+          add("List network tools", "LSNET")
+          menu += ["echo    0) Back to DOS",
+                   "echo  ------------------------------------------",
+                   "set C=", "set /p C=Enter choice: "]
+          for key, target in opts:
+              menu.append('if "%%C%%"=="%s" goto %s' % (key, target))
+          menu.append('if "%C%"=="0" goto END')
+          menu.append("goto TOP")
+
+          menu += [":NETRUN", "C:\\NET\\NE2000.COM 0x60 10 0x300", "C:\\NET\\DHCP.EXE", "pause", "goto TOP"]
+          if has("HTGET.EXE"):
+              menu += [":WEB", "echo HTTP only (port 80). Example: http://example.com/",
+                       "set U=", "set /p U=URL: ", "C:\\NET\\HTGET.EXE %U%", "pause", "goto TOP"]
+          if has("TELNET.EXE"):
+              menu += [":BBS", "echo Needs wisp or wsproxy backend (port 23).",
+                       "set H=", "set /p H=BBS host: ", "C:\\NET\\TELNET.EXE %H%", "pause", "goto TOP"]
+          if has("NC.EXE"):
+              menu += [":MAIL",
+                       "echo Plain POP3 (110) / SMTP (25) via netcat.",
+                       "echo After connecting type: USER name / PASS word / LIST / RETR 1 / QUIT",
+                       "set S=", "set /p S=POP3 server: ", "C:\\NET\\NC.EXE %S% 110", "pause", "goto TOP"]
+          if has("IRCJR.EXE"):
+              menu += [":IRC", "echo Needs wisp or wsproxy backend (port 6667).",
+                       "C:\\NET\\IRCJR.EXE", "pause", "goto TOP"]
+          if has("PING.EXE"):
+              menu += [":PING", "set P=", "set /p P=Host or IP: ",
+                       "C:\\NET\\PING.EXE %P%", "pause", "goto TOP"]
+          if has("FTP.EXE"):
+              menu += [":FTP", "set F=", "set /p F=FTP server: ",
+                       "C:\\NET\\FTP.EXE %F%", "pause", "goto TOP"]
+          if browsers:
+              main = sorted(browsers)[0]
+              menu += [":BROWSER",
+                       "if not exist C:\\WEB\\BOBCAT.EXE goto NOBROWSER",
+                       "echo Starting Bobcat ... (HTTP only, port 80)",
+                       "echo Load the packet driver first (option 1).",
+                       "pause",
+                       "C:\\WEB\\BOBCAT.EXE",
+                       "pause", "goto TOP",
+                       ":NOBROWSER",
+                       "echo Bobcat is not installed.",
+                       "echo Use option 2 (HTGET) to fetch pages instead.",
+                       "pause", "goto TOP"]
+          menu += [":HELPTXT", "cls", "type A:\\HELP.TXT", "pause", "goto TOP",
+                   ":GAMES", "dir C:\\GAMES", "pause", "goto TOP",
+                   ":LSNET", "dir C:\\NET", "pause", "goto TOP",
+                   ":END", "cls"]
+          floppy.add_file("MENU.BAT", ("\r\n".join(menu) + "\r\n").encode("ascii"))
+
+          floppy.add_file("GAMES.BAT", b"@echo off\r\ndir C:\\GAMES\r\n")
+
+          # ---------- HELP：模仿 MS-DOS 5/6 的 HELP 语气 ----------
+          # 全大写命令名 + 点线引导 + 简短祈使句 + 经典提示语；不出现模拟器词汇
+          H = ["",
+               "                    FreeDOS Command Reference",
+               "",
+               "  For more information on a specific command, type HELP command-name.",
+               "",
+               "  MENU ........ Display the program menu",
+               "  NET ......... Load the NE2000 packet driver and start DHCP",
+               "  HELP ........ Display this list    (CMDS is the same)",
+               "  GAMES ....... List the games on drive C",
+               "  DIR ......... List files           TYPE ..... Display a text file",
+               "  EDIT ........ Edit a text file     CLS ...... Clear the screen",
+               "  VER ......... Display the DOS version",
+               "",
+               "  NETWORK COMMANDS  (C:\\NET)"]
+
+          net_col = []
+          if has("HTGET.EXE"):   net_col.append("HTGET   Web page (80)")
+          if has("TELNET.EXE"):  net_col.append("TELNET  BBS (23)")
+          if has("NC.EXE"):      net_col.append("NC      Mail 110/25")
+          if has("IRCJR.EXE"):   net_col.append("IRCJR   IRC (6667)")
+          if has("PING.EXE"):    net_col.append("PING    Ping a host")
+          if has("FTP.EXE"):     net_col.append("FTP     Transfer files")
+          if has("SNTP.EXE"):    net_col.append("SNTP    Set the clock")
+          if has("DHCP.EXE"):    net_col.append("DHCP    Renew IP address")
+          if has("NE2000.COM"):  net_col.append("NE2000  Packet driver 0x60 10 0x300")
+          for i in range(0, len(net_col), 2):
+              left = net_col[i]
+              right = net_col[i + 1] if i + 1 < len(net_col) else ""
+              H.append("  " + left.ljust(24) + right)
+
+          H += ["",
+                "  WEB ......... C:\\WEB\\BOBCAT.EXE  -  text web browser",
+                "  NOTE ........ Type NET before any network command."]
+          if extra_merged:
+              H.append("  APPS ........ " + "  ".join("C:\\" + d for d in sorted(extra_merged)))
+          H += ["", ]
+
+          help_txt = ("\r\n".join(H) + "\r\n").encode("ascii")
+          floppy.add_file("HELP.TXT", help_txt)
+          help_bat = b"@echo off\r\ncls\r\ntype A:\\HELP.TXT\r\n"
+          floppy.add_file("HELP.BAT", help_bat)
+          floppy.add_file("CMDS.BAT", help_bat)
+
+          # ---------- 保存 ----------
+          size_f = floppy.save(os.path.join(OUT, "freedos-boot.img"))
+          log("  软盘完成: %d 字节，剩余 %d KB" % (size_f, floppy.free_clusters() * params["spc"] * params["bps"] // 1024))
+          log("  菜单项 %d 个" % len(opts))
+          log("\n完成。")
+          PYEOF
+          python3 /tmp/bld/build.py
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f freedos-boot.img freedos-disk.img
+          if git diff --staged --quiet; then
+            echo "无变化，跳过提交"
+          else
+            git commit -m "build: FreeDOS boot floppy + program disk (network/IRC/browser)"
+            git push
+          fi
+
+      - name: Summary
+        run: |
+          {
+            echo "### 构建完成"
+            echo ""
+            echo "- \`freedos-boot.img\` — 启动软盘（含欢迎页文字）"
+            echo "- \`freedos-disk.img\` — 程序硬盘（网卡驱动 / mTCP / 浏览器 / 游戏）"
+            echo ""
+            echo "日志里带 \`!!\` 的说明该软件没下载到，可重跑一次 workflow。"
+            echo "欢迎页文字改本文件顶部的 \`WELCOME:\` 段。"
+          } >> $GITHUB_STEP_SUMMARY
+          ls -l freedos-boot.img freedos-disk.img
