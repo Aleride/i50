@@ -77,7 +77,11 @@ html,body{height:100%;background:#d6d7c5;color:var(--fg);
   radial-gradient(circle 1.6px at calc(100% - 3px) 3px,#6f7062 0 55%,rgba(255,255,255,.85) 75%,transparent 100%),
   radial-gradient(circle 1.6px at 3px calc(100% - 3px),#6f7062 0 55%,rgba(255,255,255,.85) 75%,transparent 100%),
   radial-gradient(circle 1.6px at calc(100% - 3px) calc(100% - 3px),#6f7062 0 55%,rgba(255,255,255,.85) 75%,transparent 100%)}
-.leds{display:flex;gap:8px;flex:0 0 auto}
+/* 指示灯窗：嵌进面板的凹陷小槽，跟机箱冲压件一致 */
+.leds{display:flex;gap:8px;flex:0 0 auto;align-items:center;
+ background:linear-gradient(#e0e1d2,#f2f2e8);border-radius:3px;padding:5px 9px;
+ border:2px solid;border-color:var(--lo) var(--hi) var(--hi) var(--lo);
+ box-shadow:inset 1px 1px 3px rgba(0,0,0,.20),0 1px 0 #fff}
 .led{display:flex;align-items:center;gap:4px;font:700 9px/1 ui-monospace,monospace;
  color:#86877a;text-shadow:1px 1px 0 #fff}
 .led i{width:10px;height:10px;border-radius:2px;display:block;background:#b3b4a2;
@@ -105,6 +109,15 @@ html,body{height:100%;background:#d6d7c5;color:var(--fg);
  border-top:2px solid #fff;border-bottom:2px solid var(--lo);
  box-shadow:inset 0 3px 8px rgba(255,255,255,.75),
             inset 0 -4px 10px rgba(0,0,0,.14)}
+/* 显示器外框四角的沉头螺丝，纯装饰 */
+#stage::before,#stage::after{content:"";position:absolute;z-index:2;pointer-events:none;
+ width:9px;height:9px;border-radius:50%;
+ background:radial-gradient(circle at 38% 34%,#f6f6ec,#a9aa98 62%,#7c7d6f);
+ box-shadow:inset 0 0 0 1px rgba(0,0,0,.18),0 1px 0 #fff;
+ opacity:.55}
+#stage::before{left:10px;top:10px}
+#stage::after{right:10px;bottom:10px}
+
 /* 显示器塑料外框（凸起斜面） */
 #frame{position:relative;line-height:0;padding:13px;
  background:linear-gradient(145deg,#f5f5eb,#cfd0c1);border:2px solid;
@@ -117,10 +130,6 @@ html,body{height:100%;background:#d6d7c5;color:var(--fg);
  border:3px solid;border-color:#7c7d6f #fff #fff #7c7d6f;
  box-shadow:inset 0 0 20px rgba(0,0,0,.85),0 0 0 3px #e7e8d9}
 #screen_container canvas{image-rendering:pixelated}
-#frame.scan::after{content:"";position:absolute;inset:13px;pointer-events:none;
- border-radius:3px;
- background:repeating-linear-gradient(rgba(0,0,0,0) 0 2px, rgba(0,0,0,.20) 2px 4px)}
-#frame.rotated.scan::after{inset:0}
 #hint{display:none!important;position:absolute;left:50%;bottom:12px;transform:translateX(-50%);
  background:linear-gradient(#fffef6,#e2e3d4);color:#4a463c;font-size:12px;font-weight:600;
  padding:7px 14px;border:2px solid;border-color:#fff var(--lo) var(--lo) #fff;
@@ -133,8 +142,17 @@ html,body{height:100%;background:#d6d7c5;color:var(--fg);
  background:linear-gradient(#f5f5eb,#d9dacd);
  border-top:2px solid #fff;
  box-shadow:inset 0 1px 0 #fff,0 -2px 5px rgba(0,0,0,.10)}
-#kbd{position:absolute;left:-9999px;top:0;width:1px;height:1px;opacity:0;border:0}
-#keys{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+/* 隐藏输入框必须留在视口内且"可见"，否则手机浏览器拒绝弹软键盘 */
+#kbd{position:fixed;left:0;top:0;width:2px;height:2px;padding:0;border:0;
+ opacity:.01;font-size:16px;line-height:1;background:transparent;
+ color:transparent;caret-color:transparent;pointer-events:none;z-index:0;
+ -webkit-user-select:text;user-select:text}
+/* 按键槽：整排键嵌在一条凹陷轨道里 */
+#keys{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
+ padding:4px;border-radius:4px;
+ background:linear-gradient(#e5e6d7,#f1f1e7);
+ border:2px solid;border-color:var(--lo) var(--hi) var(--hi) var(--lo);
+ box-shadow:inset 1px 1px 3px rgba(0,0,0,.15),0 1px 0 #fff}
 #keys::-webkit-scrollbar{display:none}
 #keys button{flex:0 0 auto;min-width:46px;
  background:linear-gradient(145deg,#f9f9f0,#dbdcce);color:var(--fg);
@@ -157,9 +175,11 @@ html,body{height:100%;background:#d6d7c5;color:var(--fg);
  box-shadow:inset 1px 1px 0 #fff,0 10px 34px rgba(0,0,0,.38);
  padding:15px;width:min(360px,92vw);display:flex;flex-direction:column;gap:8px}
 #menu h3{font-size:15px;font-weight:700;color:#35362e;
- text-shadow:1px 1px 0 #fff}
+ text-shadow:1px 1px 0 #fff;padding-bottom:7px;
+ border-bottom:1px solid #b5b6a2;box-shadow:0 1px 0 #fff}
 #menu h4{font-size:10px;color:#74756a;font-weight:700;margin-top:5px;
- letter-spacing:1px;text-transform:uppercase;text-shadow:1px 1px 0 #fff}
+ letter-spacing:1px;text-transform:uppercase;text-shadow:1px 1px 0 #fff;
+ padding-bottom:4px;border-bottom:1px dotted #c3c4b1}
 #menu button{background:linear-gradient(145deg,#f9f9f0,#dbdcce);color:var(--fg);
  border:2px solid;border-color:var(--hi) var(--lo) var(--lo) var(--hi);
  box-shadow:var(--bevel);border-radius:4px;padding:11px 12px;font-size:14px;
@@ -167,7 +187,12 @@ html,body{height:100%;background:#d6d7c5;color:var(--fg);
 #menu button:active{border-color:var(--lo) var(--hi) var(--hi) var(--lo);
  box-shadow:inset 2px 2px 4px rgba(0,0,0,.28)}
 #menu button.danger{background:linear-gradient(145deg,#e6e6d8,#cfd0bf);color:#55564a}
-#menu .note{font-size:11px;color:#6b6c60;line-height:1.65;margin-top:2px}
+/* 说明文字也做成嵌进面板的凹槽铭牌，不再是浮在表面的裸文字 */
+#menu .note{font-size:11px;color:#6b6c60;line-height:1.65;margin-top:2px;
+ background:linear-gradient(#e5e6d7,#f4f4ea);border-radius:3px;
+ padding:8px 10px;border:2px solid;
+ border-color:var(--lo) var(--hi) var(--hi) var(--lo);
+ box-shadow:inset 1px 1px 3px rgba(0,0,0,.16),0 1px 0 #fff}
 #menu select{background:#fffef6;color:var(--fg);border:2px solid;
  border-color:var(--lo) var(--hi) var(--hi) var(--lo);border-radius:4px;
  box-shadow:inset 1px 1px 3px rgba(0,0,0,.14);
@@ -189,20 +214,35 @@ html,body{height:100%;background:#d6d7c5;color:var(--fg);
  border:2px solid;border-color:var(--hi) var(--lo) var(--lo) var(--hi);
  box-shadow:var(--bevel);padding:12px 26px;border-radius:4px;font-size:15px}
 
+/* ---------- 网页全屏 ----------
+   原生 Fullscreen：整个 #app（含面板、键盘条）一起进全屏；
+   iOS Safari 不支持 Fullscreen API 时退到 .pfs 伪全屏（fixed 铺满 + 收起地址栏）。 */
+html:fullscreen,body:fullscreen{background:#d6d7c5}
+:fullscreen #app{height:100dvh}
+body.pfs{overflow:hidden}
+body.pfs #app{position:fixed;inset:0;z-index:50;height:100dvh;
+ padding-top:env(safe-area-inset-top)}
+#btn-fs.lit,#keys button.lit{background:linear-gradient(145deg,#cbd5dc,#aabcc4);color:#2a3a42}
+#menu button.lit{background:linear-gradient(145deg,#cbd5dc,#aabcc4);color:#2a3a42}
+
 /* ---------- 响应式 ---------- */
-@media(max-width:767px){
-  #panel{gap:6px;padding:6px 8px}
-  .stamp{padding:3px 5px}
-  .stamp img{height:17px}
-  .stamp::before{left:5px;right:5px;top:3px;bottom:3px}
-  #power{width:34px;height:34px;font-size:15px}
-  #panel button:not(#power){padding:5px 8px;min-height:32px}
-  #frame{padding:9px}
-  #keys button{min-width:42px;padding:8px 7px;font-size:12px}
-  #keys button.go{min-width:46px}
-}
+/* 手机专属紧凑布局：用 body.phone 判定，横放手机也保持竖屏结构 */
+body.phone [data-act="rot"]{display:none!important}
+body.phone #panel{gap:4px;padding:5px 6px}
+body.phone .stamp{padding:3px 5px}
+body.phone .stamp img{height:17px}
+body.phone .stamp::before{left:5px;right:5px;top:3px;bottom:3px}
+body.phone #power{width:32px;height:32px;font-size:15px}
+body.phone #panel button:not(#power){padding:5px 8px;min-height:30px}
+body.phone .leds{padding:3px 5px;gap:5px}
+body.phone #frame{padding:4px;border-radius:6px}
+body.phone #screen_container{border-width:2px;box-shadow:inset 0 0 14px rgba(0,0,0,.85),0 0 0 1px #e7e8d9}
+body.phone #dock{padding:5px 6px calc(5px + env(safe-area-inset-bottom))}
+body.phone #keys{padding:3px}
+body.phone #keys button{min-width:40px;padding:7px 6px;font-size:12px;min-height:34px}
+body.phone #keys button.go{min-width:44px}
 @media(min-width:1200px){ #panel{padding:9px 15px} }
-/* 不再提示「请横屏」：想横放用户自己点旋转按钮 */
+/* 手机锁定竖屏；电脑保留旋转按钮与 hover 高亮 */
 @media(hover:hover) and (pointer:fine){
   #panel button:not(#power):hover{background:linear-gradient(145deg,#fff,#e4e5d6)}
   #keys button:hover{background:linear-gradient(145deg,#fff,#e4e5d6)}
@@ -223,7 +263,7 @@ html,body{height:100%;background:#d6d7c5;color:var(--fg);
     <span class="sp"></span>
     <button data-act="rot" id="btn-rot-top" title="旋转屏幕 90°">⟳</button>
     <button data-act="dock" id="btn-dock" title="收起/展开键盘条">⌨</button>
-    <button data-act="fs" title="全屏">⛶</button>
+    <button data-act="fs" id="btn-fs" title="网页全屏 / 退出全屏">⛶</button>
     <button data-act="menu" title="更多">☰</button>
   </div>
 
@@ -240,7 +280,8 @@ html,body{height:100%;background:#d6d7c5;color:var(--fg);
   </div>
 
   <div id="dock">
-    <input id="kbd" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <input id="kbd" type="text" inputmode="text" enterkeyhint="go"
+           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     <div id="keys">
       <button data-act="run" data-cmd="MENU" class="go">菜单</button>
       <button data-act="run" data-cmd="NET" class="go">连网</button>
@@ -280,7 +321,7 @@ html,body{height:100%;background:#d6d7c5;color:var(--fg);
     <div class="note" id="nic-note"></div>
 
     <h4>显示</h4>
-    <button data-act="m-scan">扫描线滤镜</button>
+    <button data-act="m-fs">网页全屏 / 退出全屏</button>
 
     <h4>关机</h4>
     <button data-act="m-off" class="danger">关机</button>
@@ -339,9 +380,25 @@ var ledPwr=$("led-pwr"), ledHdd=$("led-hdd"), ledNet=$("led-net");
 
 var em=null, running=false, res={w:720,h:400};
 var zoom=1, rot=0, fitMode=true;
-/* 旋转状态按「窄屏 / 宽屏」分开记，手机转过不影响电脑 */
-function rotKey(){ return "v86-rot-" + (window.innerWidth < 768 ? "narrow" : "wide"); }
-try{ rot = localStorage.getItem(rotKey()) === "1" ? 90 : 0; }catch(e){}
+/* 手机（窄屏触摸设备）永远竖屏，不允许把画面转 90°；
+   电脑 / 宽屏平板保持原样，旋转按钮和状态记忆都在 */
+function isPhone(){
+  if(!TOUCH) return false;
+  /* 用屏幕短边而不是视口宽度：手机横过来时也仍是手机 */
+  var sw = window.screen.width  || window.innerWidth;
+  var sh = window.screen.height || window.innerHeight;
+  return Math.min(sw, sh) <= 600;      /* 手机 ≤500，平板 ≥768 */
+}
+function syncPhoneClass(){
+  var ph = isPhone();
+  document.body.classList.toggle("phone", ph);
+  return ph;
+}
+syncPhoneClass();
+function rotKey(){ return "v86-rot-" + (isPhone() ? "phone" : "wide"); }
+try{
+  rot = (localStorage.getItem(rotKey()) === "1" && !isPhone()) ? 90 : 0;
+}catch(e){ rot = 0; }
 var bootAt=0, ipsLast=0, ipsTime=0;
 var hddTimer=null, netTimer=null;
 
@@ -390,9 +447,10 @@ function fit(){
   if(!w || !h) return;
   var cw = stage.clientWidth - 6, ch = stage.clientHeight - 6;
   if(cw<=0 || ch<=0) return;
-  // 不做任何自动旋转：横放与否完全由用户点「旋转」按钮决定
-  // 预留显示器外框的厚度，避免白色边框被裁掉
-  var pad = rot ? 10 : (window.innerWidth < 768 ? 22 : 34);
+  // 手机锁定竖屏；电脑上横放与否完全由用户点「旋转」按钮决定
+  if(isPhone()) rot = 0;
+  // 手机上把显示器外框留白压到最小，让屏幕尽量铺满宽度
+  var pad = rot ? 10 : (isPhone() ? 6 : 34);
   var aw = Math.max(80, cw - pad), ah = Math.max(80, ch - pad);
   var s = rot ? Math.min(aw/h, ah/w) : Math.min(aw/w, ah/h);
   zoom = Math.min(3.2, Math.max(0.3, s));
@@ -406,7 +464,7 @@ function applyTransform(){
   $("frame").classList.toggle("rotated", rot === 90);
 }
 function showHint(t){}   /* 真机不会弹提示，界面保持静默 */
-addEventListener("resize", fit);
+addEventListener("resize", function(){ syncPhoneClass(); fit(); });
 addEventListener("orientationchange", function(){ setTimeout(fit,300); });
 
 /* ---------------- 开机 ---------------- */
@@ -517,20 +575,69 @@ function reset(){
   boot();
 }
 
-/* ---------------- 全屏 ---------------- */
-function isFs(){ return !!(document.fullscreenElement||document.webkitFullscreenElement); }
+/* ---------------- 网页全屏 ----------------
+   注意：不用 v86 自带的 screen_go_fullscreen()——那个只把 canvas 铺满，
+   会把机箱面板和键盘条一起丢掉，手机上就没法输入了。
+   这里让整个网页进全屏，界面完整保留。 */
+var pseudoFs = false;
+function nativeFs(){
+  return !!(document.fullscreenElement || document.webkitFullscreenElement);
+}
+function isFs(){ return nativeFs() || pseudoFs; }
+function syncFsBtn(){
+  var on = isFs();
+  var b = $("btn-fs"); if(b) b.classList.toggle("lit", on);
+  var m = document.querySelector('[data-act="m-fs"]');
+  if(m) m.classList.toggle("lit", on);
+}
+function fitAfterFs(){
+  syncFsBtn();                    /* 退出全屏时按钮高亮必须同步熄灭 */
+  syncPhoneClass(); fit(); setTimeout(fit, 120); setTimeout(fit, 320);
+}
+function enablePseudoFs(){
+  if(nativeFs()) return;
+  pseudoFs = true;
+  document.body.classList.add("pfs");
+  try{ window.scrollTo(0, 1); }catch(e){}
+  try{ window.scrollTo(0, 0); }catch(e){}
+  fitAfterFs();
+}
 function goFs(){
-  if(em && em.screen_go_fullscreen){ try{ em.screen_go_fullscreen(); return; }catch(e){} }
-  var t=document.documentElement;
-  if(t.requestFullscreen) t.requestFullscreen();
-  else if(t.webkitRequestFullscreen) t.webkitRequestFullscreen();
+  /* 手机上进全屏时尝试系统级竖屏锁定（Android Chrome 可能生效，iOS 静默失败） */
+  if(isPhone() && screen.orientation && screen.orientation.lock){
+    try{ var q=screen.orientation.lock("portrait"); if(q&&q.catch) q.catch(function(){}); }catch(e){}
+  }
+  var el = document.documentElement;
+  var fn = el.requestFullscreen || el.webkitRequestFullscreen
+        || document.body.requestFullscreen || document.body.webkitRequestFullscreen;
+  if(fn){
+    try{
+      var r = fn.call(el);
+      if(r && r.catch){
+        r.catch(enablePseudoFs);
+        setTimeout(function(){ if(!nativeFs()) enablePseudoFs(); }, 500);
+      }else{
+        setTimeout(function(){ if(!nativeFs()) enablePseudoFs(); }, 400);
+      }
+    }catch(e){ enablePseudoFs(); }
+  }else{
+    enablePseudoFs();
+  }
+  setTimeout(syncFsBtn, 60);
 }
 function exitFs(){
-  if(document.exitFullscreen) document.exitFullscreen();
-  else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+  if(nativeFs()){
+    try{
+      if(document.exitFullscreen) document.exitFullscreen();
+      else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }catch(e){}
+  }
+  if(pseudoFs){ pseudoFs=false; document.body.classList.remove("pfs"); }
+  fitAfterFs();
 }
-document.addEventListener("fullscreenchange", function(){ setTimeout(fit,220); });
-document.addEventListener("webkitfullscreenchange", function(){ setTimeout(fit,220); });
+function toggleFs(){ isFs() ? exitFs() : goFs(); }
+document.addEventListener("fullscreenchange", function(){ pseudoFs=false; fitAfterFs(); });
+document.addEventListener("webkitfullscreenchange", function(){ pseudoFs=false; fitAfterFs(); });
 
 /* ---------------- 键盘 ---------------- */
 var SC={esc:[0x01],tab:[0x0F],enter:[0x1C],backspace:[0x0E],ctrl:[0x1D],alt:[0x38],shift:[0x2A],
@@ -567,12 +674,85 @@ function runCmd(cmd){
 }
 var caps=false;
 
+/* ================================================================
+   手机软键盘 → DOS
+   之前这里只有 focus，输入进去的字符根本没人送给虚拟机，
+   所以「点屏幕能弹输入法但打字没反应」。现在补齐整个链路：
+     · input 事件 + 50ms 轮询双保险（各家输入法行为不一致）
+     · composition 期间攒着，上屏后一次性取（中文会被过滤掉）
+     · Enter / Backspace / Esc / Tab / 方向键走 keydown
+     · 开机未完成时不丢字，等就绪后自动补发
+   ================================================================ */
+var composing=false;
+
+function safeText(s){
+  var out="";
+  for(var i=0;i<s.length;i++){
+    var c=s.charCodeAt(i);
+    /* DOS/CP437 只认可打印 ASCII；中文等非 ASCII 直接丢弃 */
+    if(c===10||c===13||c===9||(c>=32&&c<=126)) out+=s.charAt(i);
+  }
+  return out;
+}
+function sendText(s){
+  s=safeText(s);
+  if(!s||!em||!running) return;
+  try{ text(s); }catch(e){ console.error("[I50] 输入失败",e); }
+}
+function flushKbd(){
+  if(composing || !kbd.value) return;
+  if(!em || !running) return;        /* 还没开机：字符留着，稍后自动补发 */
+  var v=kbd.value; kbd.value="";
+  sendText(v);
+}
+kbd.addEventListener("input", flushKbd);
+kbd.addEventListener("compositionstart", function(){ composing=true; });
+kbd.addEventListener("compositionend", function(e){
+  composing=false;
+  var v=kbd.value || e.data || "";
+  kbd.value="";
+  sendText(v);
+});
+kbd.addEventListener("keydown", function(e){
+  if(e.isComposing || e.keyCode===229) return;   /* 输入法组合中，别抢 */
+  var k=e.key;
+  if(k==="Enter"){
+    e.preventDefault(); flushKbd(); tap([0x1C]); return;
+  }
+  if(k==="Backspace"){
+    e.preventDefault();
+    if(kbd.value) kbd.value=kbd.value.slice(0,-1);
+    else tap([0x0E]);
+    return;
+  }
+  var special={Escape:[0x01],Tab:[0x0F],ArrowUp:SC.up,ArrowDown:SC.down,
+               ArrowLeft:SC.left,ArrowRight:SC.right};
+  if(special[k]){ e.preventDefault(); flushKbd(); tap(special[k]); }
+});
+/* 兜底：某些手写/九宫格输入法不触发 input，只往 value 里塞字 */
+setInterval(flushKbd, 50);
+
+/* 唤起软键盘：必须在用户手势里同步调用，且元素要在视口内 */
+function wakeKbd(){
+  if(!TOUCH) return;
+  try{ kbd.focus({preventScroll:true}); }catch(e){ try{ kbd.focus(); }catch(e2){} }
+  try{ kbd.setSelectionRange(kbd.value.length,kbd.value.length); }catch(e){}
+}
+/* 按钮别抢走焦点，否则输入法会收起（mousedown 阻止聚焦，click 仍正常触发） */
+document.addEventListener("mousedown", function(e){
+  if(e.target && e.target.closest && e.target.closest("button")) e.preventDefault();
+}, {passive:false});
+document.addEventListener("pointerdown", function(e){
+  if(e.target && e.target.closest && e.target.closest("button"))
+    window.__kbWasFocused = (document.activeElement === kbd);
+}, true);
+
 /* ---------------- 鼠标 / 触摸 ---------------- */
 var last=null,t0=0,moved=0;
 function mouse(dx,dy,b){ if(em&&running&&em.mouse_send_event) em.mouse_send_event(dx,dy,b); }
 
 stage.addEventListener("touchstart",function(e){
-  kbd.focus({preventScroll:true});
+  wakeKbd();
   var t=e.touches[0]; last={x:t.clientX,y:t.clientY}; t0=Date.now(); moved=0;
 },{passive:true});
 
@@ -592,7 +772,7 @@ stage.addEventListener("touchend",function(e){
 });
 
 stage.addEventListener("click",function(){
-  if(TOUCH){ kbd.focus({preventScroll:true}); return; }
+  if(TOUCH){ if(document.activeElement !== kbd) wakeKbd(); return; }
   if(em && !document.pointerLockElement && em.lock_mouse){
     try{ em.lock_mouse(); showHint("鼠标已锁定，按 Esc 解锁"); }catch(err){}
   }
@@ -687,7 +867,8 @@ document.addEventListener("click",function(e){
   if(b.dataset.key){ tap(SC[b.dataset.key]||[]); return; }
 
   switch(b.dataset.act){
-    case "fs": isFs() ? exitFs() : goFs(); break;
+    case "fs":
+    case "m-fs": closeMenu(); toggleFs(); break;
     case "menu": openMenu(); break;
     case "on": offEl.classList.remove("on"); boot(); break;
 
@@ -704,6 +885,7 @@ document.addEventListener("click",function(e){
     case "m-shot": closeMenu(); shot(); break;
     case "rot":
     case "m-rot":
+      if(isPhone()){ closeMenu(); return; }
       rot = rot ? 0 : 90; fitMode=false; fit();
       showHint(rot ? "屏幕已旋转 90°" : "屏幕已转正");
       closeMenu(); break;
@@ -711,11 +893,14 @@ document.addEventListener("click",function(e){
       $("dock").classList.toggle("hide");
       b.classList.toggle("lit", $("dock").classList.contains("hide"));
       setTimeout(fit, 30); break;
-    case "m-scan": frame.classList.toggle("scan"); closeMenu(); break;
     case "m-fit": fitMode=true; rot=0; fit(); closeMenu(); break;
     case "m-off": closeMenu(); shutdown(); break;
     case "m-close": closeMenu(); break;
   }
+  /* 敲功能键 / 快捷命令后，把输入法还给 DOS（菜单、关机、全屏除外） */
+  var keepKb = !!(b.dataset.key || b.dataset.cmd) ||
+               ["rot","dock","caps","cad","m-reset"].indexOf(b.dataset.act) >= 0;
+  if(TOUCH && keepKb && !menuEl.classList.contains("on")) wakeKbd();
 });
 
 /* ---------------- 起飞 ---------------- */
