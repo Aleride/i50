@@ -1,0 +1,66 @@
+name: Fetch v86 runtime
+
+# 手动触发：Actions → Fetch v86 runtime → Run workflow
+# 下载运行 FreeDOS 需要的三个文件（如果仓库里已经有了，不用再跑）
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download runtime
+        run: |
+          UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+          dl () {
+            dest="$1"; min="$2"; shift 2
+            for u in "$@"; do
+              echo "  尝试 $u"
+              if curl -sSfL --retry 4 --retry-delay 3 --max-time 180 -A "$UA" -o "$dest" "$u"; then
+                sz=$(stat -c%s "$dest" 2>/dev/null || echo 0)
+                if [ "$sz" -ge "$min" ]; then echo "  OK $sz 字节"; return 0; fi
+                echo "  太小($sz)，丢弃"
+              fi
+            done
+            echo "  全部失败"; rm -f "$dest"; return 1
+          }
+
+          echo "=== libv86.js ==="
+          dl libv86.js 100000 \
+            "https://unpkg.com/v86/build/libv86.js" \
+            "https://cdn.jsdelivr.net/npm/v86@latest/build/libv86.js" || exit 1
+
+          echo "=== v86.wasm ==="
+          dl v86.wasm 500000 \
+            "https://unpkg.com/v86/build/v86.wasm" \
+            "https://cdn.jsdelivr.net/npm/v86@latest/build/v86.wasm" || exit 1
+
+          echo "=== BIOS ==="
+          mkdir -p bios
+          dl bios/seabios.bin 100000 \
+            "https://raw.githubusercontent.com/copy/v86/master/bios/seabios.bin" \
+            "https://cdn.jsdelivr.net/npm/v86@latest/bios/seabios.bin" || echo "!! seabios 未获得"
+          dl bios/vgabios.bin 10000 \
+            "https://raw.githubusercontent.com/copy/v86/master/bios/vgabios.bin" \
+            "https://cdn.jsdelivr.net/npm/v86@latest/bios/vgabios.bin" || echo "!! vgabios 未获得"
+
+          echo "--- 结果 ---"
+          ls -l libv86.js v86.wasm bios/ 2>/dev/null
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f libv86.js v86.wasm bios/seabios.bin bios/vgabios.bin
+          if git diff --staged --quiet; then
+            echo "无变化，跳过提交"
+          else
+            git commit -m "chore: add v86 runtime and BIOS files"
+            git push
+          fi
