@@ -1,7 +1,7 @@
 name: Fetch v86 runtime
 
 # 手动触发：Actions → Fetch v86 runtime → Run workflow
-# 下载运行 FreeDOS 需要的三个文件（如果仓库里已经有了，不用再跑）
+# 下载运行 FreeDOS 需要的文件（仓库里已经有了就不用再跑）
 on:
   workflow_dispatch:
 
@@ -18,35 +18,59 @@ jobs:
       - name: Download runtime
         run: |
           UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+          # dl <目标> <最小字节> <类型 js|wasm|bin> <url...>
+          # 关键：先写 .dl 临时文件，全部校验通过才 mv 覆盖。
+          # 旧版直接 -o "$dest"，某个源失败时 rm -f 会把仓库里本来
+          # 好好的 libv86.js / v86.wasm 一起删掉，页面立刻红灯。
+          # 另外：仓库里已有合法文件时，所有源都挂了就沿用旧文件、算成功，
+          # 不会因为「重跑一次 Fetch」误报红叉让人以为坏了。
           dl () {
-            dest="$1"; min="$2"; shift 2
+            dest="$1"; min="$2"; kind="$3"; shift 3
+            tmp="$dest.dl"
+            ok_file () {
+              f="$1"
+              [ -f "$f" ] || return 1
+              sz=$(stat -c%s "$f" 2>/dev/null || echo 0)
+              [ "$sz" -ge "$min" ] || return 1
+              head8=$(head -c 8 "$f" | od -An -tx1 | tr -d ' \n')
+              case "$head8" in
+                3c21444f43545950*|3c68746d6c*|3c48544d4c*) return 1 ;;
+              esac
+              if [ "$kind" = "wasm" ]; then
+                case "$head8" in 0061736d*) : ;; *) return 1 ;; esac
+              fi
+              return 0
+            }
             for u in "$@"; do
               echo "  尝试 $u"
-              if curl -sSfL --retry 4 --retry-delay 3 --max-time 180 -A "$UA" -o "$dest" "$u"; then
-                sz=$(stat -c%s "$dest" 2>/dev/null || echo 0)
-                if [ "$sz" -ge "$min" ]; then echo "  OK $sz 字节"; return 0; fi
-                echo "  太小($sz)，丢弃"
+              rm -f "$tmp"
+              if curl -sSfL --retry 4 --retry-delay 3 --max-time 180 -A "$UA" -o "$tmp" "$u" && ok_file "$tmp"; then
+                mv -f "$tmp" "$dest"; echo "  OK $(stat -c%s "$dest") 字节"; return 0
               fi
+              echo "  该源不可用，丢弃"
             done
-            echo "  全部失败"; rm -f "$dest"; return 1
+            rm -f "$tmp"
+            if ok_file "$dest"; then echo "  沿用仓库已有 $dest"; return 0; fi
+            echo "  全部失败且无可用文件"
+            return 1
           }
 
           echo "=== libv86.js ==="
-          dl libv86.js 100000 \
+          dl libv86.js 100000 js \
             "https://unpkg.com/v86/build/libv86.js" \
             "https://cdn.jsdelivr.net/npm/v86@latest/build/libv86.js" || exit 1
 
           echo "=== v86.wasm ==="
-          dl v86.wasm 500000 \
+          dl v86.wasm 500000 wasm \
             "https://unpkg.com/v86/build/v86.wasm" \
             "https://cdn.jsdelivr.net/npm/v86@latest/build/v86.wasm" || exit 1
 
           echo "=== BIOS ==="
           mkdir -p bios
-          dl bios/seabios.bin 100000 \
+          dl bios/seabios.bin 100000 bin \
             "https://raw.githubusercontent.com/copy/v86/master/bios/seabios.bin" \
             "https://cdn.jsdelivr.net/npm/v86@latest/bios/seabios.bin" || echo "!! seabios 未获得"
-          dl bios/vgabios.bin 10000 \
+          dl bios/vgabios.bin 10000 bin \
             "https://raw.githubusercontent.com/copy/v86/master/bios/vgabios.bin" \
             "https://cdn.jsdelivr.net/npm/v86@latest/bios/vgabios.bin" || echo "!! vgabios 未获得"
 
@@ -57,7 +81,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f libv86.js v86.wasm bios/seabios.bin bios/vgabios.bin
+          # 只 add 真实存在的文件：BIOS 下载失败时 git add -f 一个不存在的
+          # 路径会报 pathspec 错误，在 -e 下直接把整个 job 变红叉。
+          for f in libv86.js v86.wasm bios/seabios.bin bios/vgabios.bin; do
+            if [ -f "$f" ]; then git add -f "$f"; fi
+          done
           if git diff --staged --quiet; then
             echo "无变化，跳过提交"
           else
