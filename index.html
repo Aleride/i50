@@ -479,9 +479,20 @@ var qs = new URLSearchParams(location.search);
 var TOUCH = (window.matchMedia && matchMedia("(pointer: coarse)").matches)
             || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
+/* 线路优先级：URL 参数 > 本地记忆 > 默认 Wisp。
+   以前是「先设 URL、再被 localStorage 无条件覆盖」，导致带 ?relay= 的链接
+   只要浏览器有历史记录就换不了线路。这里把本地记忆降级成「无 URL 参数时的默认值」。
+   只接受 wisp:// wisps:// ws:// wss://，和菜单里 CUSTOM 的校验一致。 */
+function validRelay(v){ return typeof v === "string" && /^(wisp|ws)s?:\/\/\S+/.test(v); }
+var savedRelay = "";
+try{ savedRelay = localStorage.getItem("v86-relay") || ""; }catch(e){}
+var urlRelay = qs.get("relay");              /* 无此参数时为 null */
+var relayPinned = validRelay(urlRelay);     /* 链接显式且合法 → 临时固定，不写回本地 */
+
 var opt = {
   mem:  parseInt(qs.get("mem"),10) || (TOUCH ? 32 : 64),
-  relay: qs.get("relay") !== null ? qs.get("relay") : DEFAULT_RELAY,
+  relay: relayPinned ? urlRelay
+       : (validRelay(savedRelay) ? savedRelay : DEFAULT_RELAY),
   cors:  qs.get("cors") || ""
 };
 
@@ -1015,6 +1026,7 @@ function applyNic(v){
   nicSel.value = v;
   if(v === "__custom__"){ syncNicUI(); $("nic-custom").focus();
     try{ $("nic-custom").select(); }catch(e){} return; }
+  relayPinned = false;              /* 用户主动改了线路 → 解除链接的临时固定 */
   opt.relay = v;
   syncNicUI(); closeMenu(); boot();
 }
@@ -1028,17 +1040,16 @@ $("nic-custom").addEventListener("keydown",function(e){
   if(e.key !== "Enter") return;
   var v = (this.value || "").trim();
   if(!/^(wisp|ws)s?:\/\/\S+/.test(v)) return;   /* 非法地址不重启，静默 */
+  relayPinned = false;              /* 用户主动改了线路 → 解除链接的临时固定 */
   opt.relay = v;
   closeMenu(); boot();
 });
 
-/* 记住上次的后端选择（同一台设备下次打开还用它） */
-try{
-  var saved = localStorage.getItem("v86-relay");
-  // 只接受 wisp:// wisps:// ws:// wss:// 这几种，其他一律回退默认
-  if(saved && /^(wisp|ws)s?:\/\/.+/.test(saved)) opt.relay = saved;
-}catch(e){}
+/* 记住上次的后端选择（同一台设备下次打开还用它）。
+   URL 指定的线路是「临时换线」，不污染长期偏好 —— 关掉链接再开，仍用自己上次选的。
+   用户在菜单里主动切换时会清掉 relayPinned，恢复正常记忆。 */
 var __saveRelay = function(){
+  if(relayPinned) return;
   try{ localStorage.setItem("v86-relay", opt.relay || ""); }catch(e){}
 };
 
