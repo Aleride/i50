@@ -855,6 +855,13 @@ jobs:
 
           has = lambda n: n in tools
 
+          # 网络类菜单项的统一前置检查：没跑过 DHCP 就先自动连一次。
+          # NETOK 由 NET.BAT 在 DHCP 成功后 set，冷启动环境里本来就是空的。
+          # 这样「忘了先选 1」不会再变成 mTCP 的 'IPADDR' must be set，
+          # 也不会因为反复点连网而重复加载 NE2000 TSR。
+          NN = ['if not "%NETOK%"=="1" call A:\\NET.BAT',
+                'if not "%NETOK%"=="1" goto TOP']
+
           # NET.BAT
           net = ["@echo off",
                  "set MTCPCFG=C:\\NET\\MTCP.CFG",
@@ -867,6 +874,8 @@ jobs:
                  ":DHCP",
                  "if not exist C:\\NET\\DHCP.EXE goto NODHCP",
                  "C:\\NET\\DHCP.EXE",
+                 "if errorlevel 1 goto END",
+                 "set NETOK=1",
                  "goto END",
                  ":NODHCP",
                  "echo DHCP.EXE missing.",
@@ -905,37 +914,42 @@ jobs:
           menu.append('if "%C%"=="0" goto END')
           menu.append("goto TOP")
 
-          menu += [":NETRUN", "C:\\NET\\NE2000.COM 0x60 10 0x300", "C:\\NET\\DHCP.EXE", "pause", "goto TOP"]
+          menu += [":NETRUN", "call A:\\NET.BAT", "pause", "goto TOP"]
           if has("HTGET.EXE"):
-              menu += [":WEB", "echo HTTP only (port 80). Example: http://example.com/",
-                       "set U=", "set /p U=URL: ", "C:\\NET\\HTGET.EXE %U%", "pause", "goto TOP"]
+              menu += [":WEB"] + NN + ["echo HTTP only (port 80). Example: http://example.com/",
+                       "set U=", "set /p U=URL: ",
+                       'if "%U%"=="" goto TOP',
+                       "C:\\NET\\HTGET.EXE %U%", "pause", "goto TOP"]
           if has("TELNET.EXE"):
-              menu += [":BBS", "echo Needs wisp or wsproxy backend (port 23).",
-                       "set H=", "set /p H=BBS host: ", "C:\\NET\\TELNET.EXE %H%", "pause", "goto TOP"]
+              menu += [":BBS"] + NN + ["echo Needs wisp or wsproxy backend (port 23).",
+                       "set H=", "set /p H=BBS host: ",
+                       'if "%H%"=="" goto TOP',
+                       "C:\\NET\\TELNET.EXE %H%", "pause", "goto TOP"]
           if has("NC.EXE"):
-              menu += [":MAIL",
+              menu += [":MAIL"] + NN + [
                        "echo Plain POP3 (110) / SMTP (25) via netcat.",
                        "echo After connecting type: USER name / PASS word / LIST / RETR 1 / QUIT",
-                       "set S=", "set /p S=POP3 server: ", "C:\\NET\\NC.EXE %S% 110", "pause", "goto TOP"]
+                       "set S=", "set /p S=POP3 server: ",
+                       'if "%S%"=="" goto TOP',
+                       "C:\\NET\\NC.EXE %S% 110", "pause", "goto TOP"]
           if has("IRCJR.EXE"):
-              menu += [":IRC", "echo Needs wisp or wsproxy backend (port 6667).",
+              menu += [":IRC"] + NN + ["echo Needs wisp or wsproxy backend (port 6667).",
                        "set S=", "set /p S=IRC server: ",
                        'if "%S%"=="" goto TOP',
                        "set CH=", "set /p CH=Channel: ",
                        "C:\\NET\\IRCJR.EXE %S% %CH%", "pause", "goto TOP"]
           if has("PING.EXE"):
-              menu += [":PING", "set P=", "set /p P=Host or IP: ",
+              menu += [":PING"] + NN + ["set P=", "set /p P=Host or IP: ",
+                       'if "%P%"=="" goto TOP',
                        "C:\\NET\\PING.EXE %P%", "pause", "goto TOP"]
           if has("FTP.EXE"):
-              menu += [":FTP", "set F=", "set /p F=FTP server: ",
+              menu += [":FTP"] + NN + ["set F=", "set /p F=FTP server: ",
+                       'if "%F%"=="" goto TOP',
                        "C:\\NET\\FTP.EXE %F%", "pause", "goto TOP"]
           if browsers:
               main = sorted(browsers)[0]
-              menu += [":BROWSER",
+              menu += [":BROWSER"] + NN + [
                        "if not exist C:\\WEB\\BOBCAT.EXE goto NOBROWSER",
-                       "echo Starting Bobcat ... (HTTP only, port 80)",
-                       "echo Load the packet driver first (option 1).",
-                       "pause",
                        "C:\\WEB\\BOBCAT.EXE",
                        "pause", "goto TOP",
                        ":NOBROWSER",
