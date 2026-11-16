@@ -736,12 +736,34 @@ jobs:
           disk = FAT16Image(size_mb=MB, label="FREEDOS")
           disk.mkdir("NET")
           for name, src in sorted(tools.items()):
+              if name == "MTCP.CFG":
+                  continue          # 下面统一生成，确保带上 IRCjr 参数
               with open(src, "rb") as f:
                   disk.add_file("NET/" + name, f.read())
               log("  + C:\\NET\\%s (%d 字节)" % (name, os.path.getsize(src)))
 
-          if "MTCP.CFG" not in tools:
-              disk.add_file("NET/MTCP.CFG", b"PACKETINT 0x60\r\n")
+          # MTCP.CFG：IRCjr 从 2009 版起把昵称/用户名/实名从环境变量移到配置文件，
+          # 缺 ircjr_nick 会直接打印 "Need to set IRCJR_NICK in the config file" 并退出。
+          # 写法是「参数名 空格 值」，不是等号；DHCP.EXE 只改写自己认识的行，
+          # 其余行原样保留，所以这些参数能在每次冷启动、每台设备上自动生效。
+          # 文件必须以 CRLF 结尾，否则旧版解析器会报 "line is too long"。
+          cfg = b"PACKETINT 0x60\r\n"
+          if "MTCP.CFG" in tools:
+              with open(tools["MTCP.CFG"], "rb") as f:
+                  raw = f.read()
+              if raw.strip():
+                  cfg = raw
+          if b"ircjr_nick" not in cfg.lower():
+              cfg += ("\r\n".join([
+                  "", "# IRCjr",
+                  "ircjr_nick I50",
+                  "ircjr_user i50",
+                  "ircjr_name I50 DOS PC",
+                  "ircjr_connect_timeout 30",
+                  "ircjr_register_timeout 60",
+                  ""]) + "\r\n").encode("ascii")
+          disk.add_file("NET/MTCP.CFG", cfg)
+          log("  + C:\\NET\\MTCP.CFG (%d 字节, 含 IRCjr 参数)" % len(cfg))
 
           # 浏览器
           for name, src in sorted(browsers.items()):
@@ -897,7 +919,10 @@ jobs:
                        "set S=", "set /p S=POP3 server: ", "C:\\NET\\NC.EXE %S% 110", "pause", "goto TOP"]
           if has("IRCJR.EXE"):
               menu += [":IRC", "echo Needs wisp or wsproxy backend (port 6667).",
-                       "C:\\NET\\IRCJR.EXE", "pause", "goto TOP"]
+                       "set S=", "set /p S=IRC server: ",
+                       'if "%S%"=="" goto TOP',
+                       "set CH=", "set /p CH=Channel: ",
+                       "C:\\NET\\IRCJR.EXE %S% %CH%", "pause", "goto TOP"]
           if has("PING.EXE"):
               menu += [":PING", "set P=", "set /p P=Host or IP: ",
                        "C:\\NET\\PING.EXE %P%", "pause", "goto TOP"]
