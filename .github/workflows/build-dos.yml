@@ -29,29 +29,10 @@ env:
   # 同名目录会自动合并；全部自动加进 PATH 并写进 HELP。
   # 下载失败只跳过这一行，日志打 !!，不影响系统构建。
   # 每行开头至少 10 个空格；# 开头是注释。
+  # 【顺序有意义】构建有总超时，按重要性从前往后下：用户点名的在最前，
+  # 直链没确认的垫底。万一超时，也只会丢后面那些可有可无的。
   # =============================================================
   EXTRA: |
-          # -- 文件管理器：Volkov Commander 4.05 英文版 (97 KB) --
-          VC | VC.EXE VC.COM VC.HLP VC.CFG VC.INI | https://vc.vvv.kyiv.ua/download/vc405sw.zip,https://vc.vvv.kyiv.ua/download/vc49908a.zip
-          # DosZip：开源双面板文件管理器，作为 VC 的备用
-          VC | DOSZIP.EXE DOSZIP.HLP | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/apps/doszip.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/apps/doszip.zip
-          # -- 压缩工具 --
-          ZIP | PKZIP.EXE PKUNZIP.EXE ZIP.EXE UNZIP.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/pkzip.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/pkunzip.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/zip.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/unzip.zip
-          # -- 命令行增强（FreeDOS 官方 base 包）--
-          UTIL | DOSKEY.COM DOSKEY.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/doskey.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/base/doskey.zip
-          UTIL | MORE.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/more.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/more.zip
-          UTIL | EDIT.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/edit.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/edit.zip
-          UTIL | HELP.EXE FASTHELP.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/ambhelp.zip
-          # -- 鼠标驱动 --
-          MOUSE | CTMOUSE.EXE CTMOUSE.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/ctmouse.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/ctmouse.zip
-          # -- 汇编器 / 调试器 --
-          DEV | NASM.EXE NASM.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/devel/nasm.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/devel/nasm.zip
-          DEV | DEBUG.EXE DEBUG.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/debug.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/debug.zip
-          # -- BASIC 解释器（FreeDOS 1.4 未收录，多试几个源）--
-          BASIC | QBASIC.EXE QBASIC.HLP QB.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/devel/qbasic.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/devel/qbasic.zip
-          # -- MOD 音乐播放器 Trakblaster --
-          MUSIC | TRAKBLAST.EXE TBLAST.EXE PLAY.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/apps/trakblaster.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/apps/trakblaster.zip
-
           # ============ 用户指定：办公 / 文档 / 聊天 ============
           # --- 文档编辑：Pico（FreeDOS 1.4 官方，413K）---
           EDIT |  | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/edit/pico.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/edit/pico.zip,http://www.pl.vim.org/packages/freedos/repositories/1.4/edit/pico.zip
@@ -63,11 +44,35 @@ env:
           NET2 |  | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/net/sshdos.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/latest/net/sshdos.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/net/sshdos.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/net/ssh2dos.zip
           # --- 聊天 / 邮件：Minuet 1.0 Beta16（邮件+新闻+Telnet+Gopher+FTP，600K）---
           NET2 |  | https://files.mpoli.fi/software/dos/network/MINUET16.ZIP,https://files.mpoli.fi/software/dos/network/MINUARC.EXE
-          # --- 命令行邮件：Barebones E-mail / TCPMAIL（POP3+SMTP，156K）---
-          # 注意：这一组没有可确认的公开直链，下面几个是候选，下不到会打 !! 并跳过
-          MAIL |  | https://www.cn-dos.net/newdos/dosware/tcpmaile.zip,https://www.cn-dos.net/newdos/dosware/barebone.zip,https://www.cn-dos.net/newdos/dosware/nettools.zip,https://files.mpoli.fi/software/dos/network/TCPMAIL.ZIP
           # --- 终端 / BBS：MS-DOS Kermit 3.16（内置 TCP/IP + Telnet，BSD 开源）---
           NET2 |  | https://www.columbia.edu/kermit/ftp/archives/msk316.zip,http://www.columbia.edu/kermit/ftp/archives/msk314.zip,https://www.columbia.edu/kermit/ftp/archives/mskermit.zip
+          # --- 命令行邮件：Barebones E-mail / TCPMAIL ---
+          # 没有可确认的公开直链，四个都是候选；放最后，下不到只会打 !! 跳过。
+          MAIL |  | https://www.cn-dos.net/newdos/dosware/tcpmaile.zip,https://www.cn-dos.net/newdos/dosware/barebone.zip,https://www.cn-dos.net/newdos/dosware/nettools.zip,https://files.mpoli.fi/software/dos/network/TCPMAIL.ZIP
+
+          # ============ 系统增强（可缺，缺了不影响开机）============
+          # -- 文件管理器：Volkov Commander 4.05 英文版 (97 KB) --
+          VC | VC.EXE VC.COM VC.HLP VC.CFG VC.INI | https://vc.vvv.kyiv.ua/download/vc405sw.zip,https://vc.vvv.kyiv.ua/download/vc49908a.zip
+          # DosZip：开源双面板文件管理器，作为 VC 的备用
+          VC | DOSZIP.EXE DOSZIP.HLP | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/apps/doszip.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/apps/doszip.zip
+          # -- 命令行增强（FreeDOS 官方 base 包）--
+          UTIL | DOSKEY.COM DOSKEY.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/doskey.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/base/doskey.zip
+          UTIL | MORE.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/more.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/more.zip
+          UTIL | EDIT.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/edit.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/edit.zip
+          UTIL | HELP.EXE FASTHELP.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/ambhelp.zip
+          # -- 鼠标驱动 --
+          MOUSE | CTMOUSE.EXE CTMOUSE.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/ctmouse.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/ctmouse.zip
+          # -- 汇编器 / 调试器 --
+          DEV | NASM.EXE NASM.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/devel/nasm.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/devel/nasm.zip
+          DEV | DEBUG.EXE DEBUG.COM | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/debug.zip,https://ftp.icm.edu.pl/packages/freedos/repositories/1.4/base/debug.zip
+
+          # ---- 以下直链未确认，垫底：拿不到不影响任何功能 ----
+          # -- 压缩工具 --
+          ZIP | PKZIP.EXE PKUNZIP.EXE ZIP.EXE UNZIP.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/pkzip.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/pkunzip.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/zip.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/archivers/unzip.zip
+          # -- BASIC 解释器（FreeDOS 1.4 未收录）--
+          BASIC | QBASIC.EXE QBASIC.HLP QB.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/devel/qbasic.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/devel/qbasic.zip
+          # -- MOD 音乐播放器（v86 不模拟声卡，装上也没声音）--
+          MUSIC | TRAKBLAST.EXE TBLAST.EXE PLAY.EXE | https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/apps/trakblaster.zip,https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/apps/trakblaster.zip
 
   # ==================== 保留哪些游戏 ====================
   # 从 A: 软盘保留（软盘空间小，只放小游戏）
@@ -537,40 +542,52 @@ jobs:
         run: |
           mkdir -p /tmp/bld/in
           UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
-          dl () {  # dl <目标文件> <最小字节> <url...>
-            dest="$1"; min="$2"; shift 2
+          # dl <目标> <最小字节> <文件类型 zip|img> <url...>
+          # 校验内容而不只看大小：有些站点 403/404 会返回体积很大的 HTML 页面，
+          # 光靠 -s 会把错误页当成软件包，后面解压失败才暴露，日志很容易看漏。
+          dl () {
+            dest="$1"; min="$2"; kind="$3"; shift 3
+            tmp="$dest.dl"
             for u in "$@"; do
               echo "  尝试 $u"
-              if curl -sSfL --retry 4 --retry-delay 3 --max-time 180 -A "$UA" -o "$dest" "$u"; then
-                sz=$(stat -c%s "$dest" 2>/dev/null || echo 0)
-                if [ "$sz" -ge "$min" ]; then echo "  OK $sz 字节"; return 0; fi
-                echo "  太小($sz)，丢弃"
+              rm -f "$tmp"
+              if curl -sSfL --retry 4 --retry-delay 3 --max-time 180 -A "$UA" -o "$tmp" "$u"; then
+                sz=$(stat -c%s "$tmp" 2>/dev/null || echo 0)
+                if [ "$sz" -lt "$min" ]; then echo "  太小($sz)，丢弃"; continue; fi
+                head4=$(head -c 4 "$tmp" | od -An -tx1 | tr -d ' \n')
+                case "$kind" in
+                  zip) if [ "${head4#504b0304}" = "$head4" ] && [ "${head4#504b0506}" = "$head4" ] && [ "${head4#504b0708}" = "$head4" ]; then
+                         echo "  非 ZIP 内容($head4)，丢弃"; continue; fi ;;
+                  img) sig=$(dd if="$tmp" bs=1 skip=510 count=2 2>/dev/null | od -An -tx1 | tr -d ' \n')
+                       if [ "$sig" != "55aa" ]; then echo "  非引导镜像($sig)，丢弃"; continue; fi ;;
+                esac
+                mv -f "$tmp" "$dest"; echo "  OK $sz 字节"; return 0
               fi
             done
-            echo "  全部失败"; rm -f "$dest"; return 1
+            echo "  全部失败"; rm -f "$tmp" "$dest"; return 1
           }
 
           echo "=== 基础镜像 ==="
-          dl /tmp/bld/in/base.img 500000 \
+          dl /tmp/bld/in/base.img 500000 img \
             "https://raw.githubusercontent.com/copy/images/master/freedos722.img" \
             "https://cdn.jsdelivr.net/gh/copy/images@master/freedos722.img" \
             "https://github.com/copy/images/raw/master/freedos722.img" || exit 1
 
           echo "=== 网卡驱动 (Crynwr packet driver) ==="
-          dl /tmp/bld/in/crynwr.zip 20000 \
+          dl /tmp/bld/in/crynwr.zip 20000 zip \
             "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/distributions/1.1/repos/net/crynwr.zip" \
             "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/distributions/1.0/repos/net/crynwr.zip" \
             "http://www.crynwr.com/drivers/crynwr.zip" || echo "!! 网卡驱动未获得"
 
           echo "=== mTCP (TCP/IP 工具集: DHCP/HTGET/TELNET/NC/IRCJR/PING/FTP/SNTP) ==="
-          dl /tmp/bld/in/mtcp.zip 30000 \
+          dl /tmp/bld/in/mtcp.zip 30000 zip \
             "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/net/mtcp/20250316.0/mtcp.zip" \
             "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/html/en/net/mtcp/20250316.0/mtcp.zip" \
             "https://www.brutman.com/mTCP/mTCP_2024-01-21.zip" \
             "https://www.brutman.com/mTCP/mTCP_2023-05-31.zip" || echo "!! mTCP 未获得"
 
           echo "=== 浏览器 Bobcat (16位文本浏览器) ==="
-          dl /tmp/bld/in/bobcat.zip 30000 \
+          dl /tmp/bld/in/bobcat.zip 30000 zip \
             "https://www.brutman.com/Bobcat/bobcat.zip" \
             "https://www.brutman.com/Bobcat/bobcat100.zip" \
             "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/net/bobcat/bobcat.zip" \
@@ -594,10 +611,6 @@ jobs:
           MB  = int(os.environ.get("DISK_MB", "16"))
 
           def log(m): print(m, flush=True)
-          def sh(c):
-              r = subprocess.run(c, shell=True, capture_output=True, text=True)
-              if r.stdout.strip(): print("   " + r.stdout.strip()[:300].replace("\n", "\n   "))
-              return r.returncode == 0
 
           # ---------- 解压 ----------
           def unzip(src, dest):
@@ -617,7 +630,8 @@ jobs:
                   pkg[name] = os.path.join(IN, name) if unzip(p, os.path.join(IN, name)) else None
               else:
                   pkg[name] = None
-          log("可用软件包: " + ", ".join(k for k, v in pkg.items() if v) or "可用软件包: 无")
+          avail = ", ".join(k for k, v in pkg.items() if v)
+          log("可用软件包: " + (avail or "无"))
 
           # ---------- 收集程序 ----------
           def find(root, name):
@@ -659,13 +673,24 @@ jobs:
           p = find(pkg["mtcp"], "MTCP.CFG")
           if p: tools["MTCP.CFG"] = p
 
-          # 浏览器
+          # 浏览器固定为 Bobcat：16 位文本浏览器，实模式可跑、无需 DPMI。
+          # 官方包除主程序外还带 NEWUSER.BAT / BOBCAT.BAT / 配置样例，
+          # 只拷 EXE 会在首次启动时因缺少配置直接退出，所以整包平铺到 C:\WEB。
           browsers = {}
-          # 浏览器固定为 Bobcat：16 位文本浏览器，实模式可跑、无需 DPMI、
-          # 在 80x25 的 DOS 屏和手机上都好读
-          p = find_any(pkg["bobcat"], "BOBCAT.EXE", "BOBCAT.COM") \
-              or find_glob(pkg["bobcat"], "BOBCAT*.EXE", "BOBCAT*.COM")
-          if p: browsers["BOBCAT.EXE"] = p
+          if pkg["bobcat"]:
+              seen = set()
+              for d, _, fs in os.walk(pkg["bobcat"]):
+                  for f in sorted(fs):
+                      nm = f.upper()
+                      if "." not in nm: continue
+                      if nm.split(".")[-1] not in ("EXE","COM","BAT","CFG","TXT","DOC","HLP","INI","DAT"):
+                          continue
+                      if nm in seen: continue
+                      seen.add(nm)
+                      browsers[nm] = os.path.join(d, f)
+              if "BOBCAT.EXE" not in browsers and "BOBCAT.COM" not in browsers:
+                  log("  !! Bobcat 包里没有主程序，整组跳过")
+                  browsers = {}
 
           log("网络工具: " + (", ".join(sorted(tools)) or "无"))
           log("浏览器:   " + (", ".join(sorted(browsers)) or "无"))
@@ -675,9 +700,32 @@ jobs:
           # 格式：每行  目录名 | 需要的文件(可空) | URL1,URL2,...
           # 下不到就跳过，绝不影响主构建
           EXTRA_DIRS = []
+          # VC.INI 这类配置文件以前会被白名单丢掉，这里一次补全。
+          EXTRA_EXT = ("EXE","COM","BAT","CFG","INI","TXT","DOC","HLP","DAT","BAS",
+                       "ASM","INC","SYS","OVL","PIF","IDX","TBL","FNT","MSG","KEY","MNU")
+          def is_html(buf):
+              h = buf[:512].lstrip().lower()
+              return h.startswith(b"<!doctype") or h.startswith(b"<html") or b"<html" in h[:256]
+          def valid_blob(buf, u):
+              # ZIP 包看魔数；直接给的 EXE/COM 看 DOS MZ 头或文件名后缀。
+              # 老站点 403 常返回一个很大的 HTML 页面，不能只看字节数。
+              if is_html(buf):
+                  log("  HTML 错误页，丢弃 %s" % u[-45:]); return False
+              if buf[:2] == b"PK":
+                  return True
+              tail = u.split("/")[-1].split("?")[0].upper()
+              if tail.endswith((".EXE", ".COM", ".SYS", ".OVL")):
+                  return True
+              log("  无法识别的文件类型，丢弃 %s" % u[-45:]); return False
           def fetch_extra():
+              import time as _time
+              # 19 行、每行多备用源；死源最多 20 秒一个，整体封顶 10 分钟。
+              # 顺序已按重要性排好，超时也只会丢末尾那些可有可无的。
+              deadline = _time.time() + 600
               spec = os.environ.get("EXTRA", "")
               for ln in spec.split("\n"):
+                  if _time.time() > deadline:
+                      log("  !! EXTRA 总超时，剩余行跳过（不影响系统构建）"); break
                   ln = ln.strip()
                   if not ln or ln.startswith("#"):
                       continue
@@ -689,15 +737,19 @@ jobs:
                   want = set(w.upper() for w in wanted.split()) if wanted else None
                   buf = None
                   for u in urls:
+                      if _time.time() > deadline: break
                       try:
                           req = urllib.request.Request(u, headers={"User-Agent":
                               "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36"})
-                          with urllib.request.urlopen(req, timeout=90) as r:
-                              buf = r.read(8 * 1024 * 1024)
-                          if len(buf) > 1000:
+                          left = max(1, int(deadline - _time.time()))
+                          with urllib.request.urlopen(req, timeout=min(20, left)) as r:
+                              chunk = r.read(8 * 1024 * 1024)
+                          # 不再设下限：合法的小 zip（几十字节）也该收，
+                          # 合法性完全交给 valid_blob 的魔数 / HTML 判断。
+                          if valid_blob(chunk, u):
+                              buf = chunk
                               log("  EXTRA 下载成功 %s (%d 字节)" % (u.split("/")[-1][:40], len(buf)))
                               break
-                          buf = None
                       except Exception as e:
                           log("  EXTRA 源失败 %s (%s)" % (u[:55], str(e)[:55]))
                   if not buf:
@@ -711,14 +763,14 @@ jobs:
                               if n.endswith("/"): continue
                               base = os.path.basename(n).upper()
                               if not base or "." not in base: continue
-                              if base.split(".")[-1] not in ("EXE","COM","BAT","CFG","TXT","DOC","HLP","DAT","BAS","ASM","SYS","OVL"):
-                                  continue
+                              if base.split(".")[-1] not in EXTRA_EXT: continue
                               if want and base not in want: continue
                               try: files[base] = z.read(n)[:2*1024*1024]
                               except Exception: pass
                   except Exception:
                       base = (urls[0].split("/")[-1].split("?")[0] or "TOOL.EXE").upper()
-                      if "." in base: files[base] = buf[:2*1024*1024]
+                      if base.split(".")[-1] in EXTRA_EXT:
+                          files[base] = buf[:2*1024*1024]
                   if not files:
                       log("  !! EXTRA [%s] 包里没找到可用文件，跳过" % folder); continue
                   EXTRA_DIRS.append((folder, files))
@@ -762,8 +814,30 @@ jobs:
                   "ircjr_connect_timeout 30",
                   "ircjr_register_timeout 60",
                   ""]) + "\r\n").encode("ascii")
+          # mTCP 解析顺序：数字 IP -> hosts 文件 -> NAMESERVER，hosts 总是最先查。
+          # v86 的 Wisp 后端不转发 UDP DNS，guest 的查询只能靠浏览器侧伪造应答，
+          # 公共节点抽风时 Telnet 就会永远停在 "Resolving server address"。
+          # 把常用 BBS 的 IPv4 烤进 hosts，域名直接命中，不再依赖 DNS。
+          if b"hostsfile" not in cfg.lower():
+              cfg += ("\r\n".join([
+                  "", "# Static hosts (skip DNS)",
+                  "HOSTSFILE C:\\NET\\HOSTS.TXT",
+                  ""]) + "\r\n").encode("ascii")
           disk.add_file("NET/MTCP.CFG", cfg)
-          log("  + C:\\NET\\MTCP.CFG (%d 字节, 含 IRCjr 参数)" % len(cfg))
+          log("  + C:\\NET\\MTCP.CFG (%d 字节, 含 IRCjr 参数 + HOSTSFILE)" % len(cfg))
+
+          hosts = [
+              "# mTCP hosts file - IP_Address  name  [aliases]",
+              "50.79.157.209   bbs.fozztexx.com",
+              "64.13.139.230   telehack.com",
+              "64.227.40.173   1984.ws",
+              "34.133.247.144  bbs.iscabbs.com",
+              "2.57.91.91      gcomm.com",
+              "192.241.222.161 lord.stabs.org",
+              "",
+          ]
+          disk.add_file("NET/HOSTS.TXT", ("\r\n".join(hosts) + "\r\n").encode("ascii"))
+          log("  + C:\\NET\\HOSTS.TXT (%d 个 BBS 条目)" % (len(hosts) - 2))
 
           # 浏览器
           for name, src in sorted(browsers.items()):
@@ -790,25 +864,30 @@ jobs:
                   except Exception as e:
                       log("  !! 放不进 %s (%s)" % (nm, str(e)[:50]))
 
-          # 使用说明
-          disk.add_file("NET/README.TXT", ("\r\n".join([
-              "C:\\NET  - networking tools",
-              "  NE2000.COM  packet driver for the emulated NIC",
-              "  DHCP.EXE    get an IP address",
-              "  HTGET.EXE   fetch a web page (HTTP port 80 only)",
-              "  TELNET.EXE  connect to a BBS (port 23)",
-              "  NC.EXE      netcat - raw TCP, use for POP3(110)/SMTP(25)",
-              "  IRCJR.EXE   IRC client (needs port 6667)",
-              "  PING/FTP/SNTP/DNS - as named",
-              "",
-              "C:\\WEB   - BOBCAT.EXE, a text-mode web browser",
-              "          HTTP only (port 80).",
-              "          Load the packet driver first (run NET).",
-              "",
-              "NOTE: Run NET.BAT before using any network tool.",
-              "      Press F1 or type HELP for the command list.",
-              "",
-          ])).encode("ascii"))
+          # 使用说明：只列真正装上的程序，不写"应该有"的东西
+          desc = {
+              "NE2000.COM": "packet driver (0x60 10 0x300)",
+              "DHCP.EXE":   "IP address",
+              "HTGET.EXE":  "web page (80)",
+              "TELNET.EXE": "BBS (23)",
+              "NC.EXE":     "raw TCP (110 25)",
+              "IRCJR.EXE":  "IRC (6667)",
+              "PING.EXE":   "ping",
+              "FTP.EXE":    "file transfer (21)",
+              "SNTP.EXE":   "clock",
+              "DNS.EXE":    "name lookup",
+          }
+          rd = ["C:\\NET  (network)"]
+          for nm in sorted(tools):
+              if nm == "MTCP.CFG": continue
+              rd.append("  %-12s %s" % (nm, desc.get(nm, "")))
+          rd.append("C:\\NET\\MTCP.CFG  (config)")
+          rd.append("C:\\NET\\HOSTS.TXT (static names)")
+          if browsers:
+              rd += ["", "C:\\WEB  (browser)"]
+              for nm in sorted(browsers): rd.append("  " + nm)
+          rd += ["", "NET  (connect)", "HELP (commands)", ""]
+          disk.add_file("NET/README.TXT", ("\r\n".join(rd) + "\r\n").encode("ascii"))
           disk.save(os.path.join(OUT, "freedos-disk.img"))
           log("  硬盘完成，剩余 %d KB" % (disk.free_clusters() * 2048 // 1024))
 
@@ -863,13 +942,19 @@ jobs:
                 'if not "%NETOK%"=="1" goto TOP']
 
           # NET.BAT
+          # NETOK=1 时跳过 NE2000：直接敲 NET 或反复点「连网」不会把 TSR
+          # 加载第二次、白占常规内存，只做一次 DHCP 续租。
+          # HOSTSFILE / ircjr_nick 已在构建时烤进 C:\NET\MTCP.CFG，
+          # DHCP 只改写自己认识的行、其余原样保留，所以这里不用再补一次
+          # （软盘上也没有 FIND.EXE，之前那段补行分支永远走不到）。
           net = ["@echo off",
                  "set MTCPCFG=C:\\NET\\MTCP.CFG",
+                 'if "%NETOK%"=="1" goto DHCP',
                  "if not exist C:\\NET\\NE2000.COM goto NODRV",
                  "C:\\NET\\NE2000.COM 0x60 10 0x300",
                  "goto DHCP",
                  ":NODRV",
-                 "echo NE2000 packet driver missing.",
+                 "echo NE2000 (missing)",
                  "goto END",
                  ":DHCP",
                  "if not exist C:\\NET\\DHCP.EXE goto NODHCP",
@@ -878,7 +963,7 @@ jobs:
                  "set NETOK=1",
                  "goto END",
                  ":NODHCP",
-                 "echo DHCP.EXE missing.",
+                 "echo DHCP (missing)",
                  ":END"]
           floppy.add_file("NET.BAT", ("\r\n".join(net) + "\r\n").encode("ascii"))
 
@@ -895,18 +980,18 @@ jobs:
               menu.append("echo    %d) %s" % (n, label))
               opts.append((str(n), target))
 
-          add("Connect to network (DHCP)", "NETRUN")
-          if has("HTGET.EXE"):  add("Browse web page (HTGET)", "WEB")
-          if has("TELNET.EXE"): add("BBS via Telnet (port 23)", "BBS")
-          if has("NC.EXE"):     add("Mail via POP3/SMTP (NC)", "MAIL")
-          if has("IRCJR.EXE"):  add("IRC chat (port 6667)", "IRC")
-          if has("PING.EXE"):   add("Ping a host", "PING")
-          if has("FTP.EXE"):    add("FTP file transfer", "FTP")
-          if browsers:          add("Web browser (Bobcat)", "BROWSER")
-          add("Help - full command list", "HELPTXT")
-          add("List games", "GAMES")
-          add("List network tools", "LSNET")
-          menu += ["echo    0) Back to DOS",
+          add("Connect (DHCP)", "NETRUN")
+          if has("HTGET.EXE"):  add("Web (HTGET 80)", "WEB")
+          if has("TELNET.EXE"): add("BBS (TELNET 23)", "BBS")
+          if has("NC.EXE"):     add("Mail (NC 110)", "MAIL")
+          if has("IRCJR.EXE"):  add("IRC (6667)", "IRC")
+          if has("PING.EXE"):   add("Ping", "PING")
+          if has("FTP.EXE"):    add("FTP (21)", "FTP")
+          if browsers:          add("Browser (Bobcat 80)", "BROWSER")
+          add("Help (commands)", "HELPTXT")
+          add("Games (C:)", "GAMES")
+          add("Tools (C:\\NET)", "LSNET")
+          menu += ["echo    0) DOS",
                    "echo  ------------------------------------------",
                    "set C=", "set /p C=Enter choice: "]
           for key, target in opts:
@@ -916,25 +1001,27 @@ jobs:
 
           menu += [":NETRUN", "call A:\\NET.BAT", "pause", "goto TOP"]
           if has("HTGET.EXE"):
-              menu += [":WEB"] + NN + ["echo HTTP only (port 80). Example: http://example.com/",
+              menu += [":WEB"] + NN + ["echo HTTP (80)",
                        "set U=", "set /p U=URL: ",
                        'if "%U%"=="" goto TOP',
                        "C:\\NET\\HTGET.EXE %U%", "pause", "goto TOP"]
           if has("TELNET.EXE"):
-              menu += [":BBS"] + NN + ["echo Needs wisp or wsproxy backend (port 23).",
-                       "set H=", "set /p H=BBS host: ",
+              menu += [":BBS"] + NN + ["echo BBS (23)",
+                       "set H=", "set /p H=Host: ",
                        'if "%H%"=="" goto TOP',
                        "C:\\NET\\TELNET.EXE %H%", "pause", "goto TOP"]
           if has("NC.EXE"):
+              # 只收信（110）；现代邮箱全 TLS，明文服务器才连得上。
+              # 提示不再写成 "POP3/SMTP"，免得以为能发信。
               menu += [":MAIL"] + NN + [
-                       "echo Plain POP3 (110) / SMTP (25) via netcat.",
-                       "echo After connecting type: USER name / PASS word / LIST / RETR 1 / QUIT",
-                       "set S=", "set /p S=POP3 server: ",
+                       "echo POP3 (110, plain server)",
+                       "echo USER PASS LIST RETR QUIT",
+                       "set S=", "set /p S=Host: ",
                        'if "%S%"=="" goto TOP',
                        "C:\\NET\\NC.EXE %S% 110", "pause", "goto TOP"]
           if has("IRCJR.EXE"):
-              menu += [":IRC"] + NN + ["echo Needs wisp or wsproxy backend (port 6667).",
-                       "set S=", "set /p S=IRC server: ",
+              menu += [":IRC"] + NN + ["echo IRC (6667)",
+                       "set S=", "set /p S=Server: ",
                        'if "%S%"=="" goto TOP',
                        "set CH=", "set /p CH=Channel: ",
                        "C:\\NET\\IRCJR.EXE %S% %CH%", "pause", "goto TOP"]
@@ -947,14 +1034,16 @@ jobs:
                        'if "%F%"=="" goto TOP',
                        "C:\\NET\\FTP.EXE %F%", "pause", "goto TOP"]
           if browsers:
-              main = sorted(browsers)[0]
+              # Bobcat 首次运行需要 NEWUSER.BAT 生成配置，包里已经带上。
+              # 只提示、不自动跑（那个批处理是交互式的，自动跑会卡在菜单里）。
               menu += [":BROWSER"] + NN + [
                        "if not exist C:\\WEB\\BOBCAT.EXE goto NOBROWSER",
+                       'if exist C:\\WEB\\NEWUSER.BAT if not exist C:\\WEB\\BOBCAT.CFG echo NEWUSER (first run)',
                        "C:\\WEB\\BOBCAT.EXE",
                        "pause", "goto TOP",
                        ":NOBROWSER",
-                       "echo Bobcat is not installed.",
-                       "echo Use option 2 (HTGET) to fetch pages instead.",
+                       "echo Bobcat (missing)",
+                       "echo HTGET (80)",
                        "pause", "goto TOP"]
           menu += [":HELPTXT", "cls", "type A:\\HELP.TXT", "pause", "goto TOP",
                    ":GAMES", "dir C:\\GAMES", "pause", "goto TOP",
@@ -984,7 +1073,7 @@ jobs:
           net_col = []
           if has("HTGET.EXE"):   net_col.append("HTGET   Web page (80)")
           if has("TELNET.EXE"):  net_col.append("TELNET  BBS (23)")
-          if has("NC.EXE"):      net_col.append("NC      Mail 110/25")
+          if has("NC.EXE"):      net_col.append("NC      POP3 (110)")
           if has("IRCJR.EXE"):   net_col.append("IRCJR   IRC (6667)")
           if has("PING.EXE"):    net_col.append("PING    Ping a host")
           if has("FTP.EXE"):     net_col.append("FTP     Transfer files")
@@ -996,9 +1085,10 @@ jobs:
               right = net_col[i + 1] if i + 1 < len(net_col) else ""
               H.append("  " + left.ljust(24) + right)
 
-          H += ["",
-                "  WEB ......... C:\\WEB\\BOBCAT.EXE  -  text web browser",
-                "  NOTE ........ Type NET before any network command."]
+          H.append("")
+          if browsers:
+              H.append("  WEB ......... C:\\WEB\\BOBCAT.EXE  (HTTP 80)")
+          H.append("  NOTE ........ NET (before network commands)")
           if extra_merged:
               H.append("  APPS ........ " + "  ".join("C:\\" + d for d in sorted(extra_merged)))
           H += ["", ]
