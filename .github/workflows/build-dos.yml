@@ -1024,6 +1024,7 @@ jobs:
                        "set S=", "set /p S=Server: ",
                        'if "%S%"=="" goto TOP',
                        "set CH=", "set /p CH=Channel: ",
+                       'if "%CH%"=="" goto TOP',
                        "C:\\NET\\IRCJR.EXE %S% %CH%", "pause", "goto TOP"]
           if has("PING.EXE"):
               menu += [":PING"] + NN + ["set P=", "set /p P=Host or IP: ",
@@ -1088,7 +1089,7 @@ jobs:
           H.append("")
           if browsers:
               H.append("  WEB ......... C:\\WEB\\BOBCAT.EXE  (HTTP 80)")
-          H.append("  NOTE ........ NET (before network commands)")
+          H.append("  NOTE ........ NET (direct commands)")
           if extra_merged:
               H.append("  APPS ........ " + "  ".join("C:\\" + d for d in sorted(extra_merged)))
           H += ["", ]
