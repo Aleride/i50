@@ -857,7 +857,7 @@ var caps=false;
      - Enter / Backspace / Esc / Tab / 方向键走 keydown
      - 开机未完成时不丢字，等就绪后自动补发
    ================================================================ */
-var composing=false;
+var composing=false, composingAt=0, needRebind=false, rebindSeq=0;
 
 function safeText(s){
   var out="";
@@ -873,16 +873,27 @@ function sendText(s){
   if(!s||!em||!running) return;
   try{ text(s); }catch(e){ console.error("[I50] 输入失败",e); }
 }
+/* 切到别的 App / 标签页时，输入法组合可能永远收不到 compositionend，
+   composing 就卡在 true，之后所有输入都被 flushKbd 第一行吞掉。
+   超过 1.5 秒无上屏事件就自愈：组合中的半截文字直接丢弃，不送进 DOS。 */
+function clearKbdState(){
+  kbd.value="";
+  composing=false; composingAt=0;
+}
+function composingStuck(){
+  return composing && composingAt && (Date.now()-composingAt>1500);
+}
 function flushKbd(){
+  if(composingStuck()) clearKbdState();
   if(composing || !kbd.value) return;
   if(!em || !running) return;        /* 还没开机：字符留着，稍后自动补发 */
   var v=kbd.value; kbd.value="";
   sendText(v);
 }
 kbd.addEventListener("input", flushKbd);
-kbd.addEventListener("compositionstart", function(){ composing=true; });
+kbd.addEventListener("compositionstart", function(){ composing=true; composingAt=Date.now(); });
 kbd.addEventListener("compositionend", function(e){
-  composing=false;
+  composing=false; composingAt=0;
   var v=kbd.value || e.data || "";
   kbd.value="";
   sendText(v);
@@ -907,22 +918,132 @@ kbd.addEventListener("keydown", function(e){
 /* 兜底：某些手写/九宫格输入法不触发 input，只往 value 里塞字 */
 setInterval(flushKbd, 50);
 
+/* 从后台回来：输入法会话可能已断（见上），虚拟机也可能整体冻住。
+   输入状态在这里清；整机冻结交给 scheduleFreezeCheck。 */
+function onReturn(){
+  clearKbdState();
+  needRebind=true;
+  scheduleFreezeCheck();
+}
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState==="visible") setTimeout(onReturn, 120);
+});
+window.addEventListener("pageshow", function(){ setTimeout(onReturn, 120); });
+window.addEventListener("focus", function(){ setTimeout(onReturn, 120); });
+window.addEventListener("blur", function(){ needRebind=true; });
+
+/* ===== 熄屏 / 切后台回来：整机冻住的自愈 =====
+   v86 靠挂起的 setTimeout 跑 CPU、靠自续 requestAnimationFrame 刷屏。
+   浏览器熄屏或冻结页面时会丢掉挂起的 timer / 暂停 rAF，回来后这两条
+   链不一定自动接上：CPU 停、屏幕定格，可 running 仍是 true、绿灯仍亮，
+   看着活着却怎么点都不动。下面只在回来后做活性检测，真冻住才恢复；
+   正常切走不打扰，也不弹任何文字（绿灯闪烁表示恢复中）。 */
+var WD = { rafAt:0, checking:false, fixing:false, fixes:0 };
+function rafBeat(){
+  WD.rafAt = Date.now();
+  try{ requestAnimationFrame(rafBeat); }catch(e){}
+}
+try{ requestAnimationFrame(rafBeat); }catch(e){}
+
+function vmTick(){
+  try{
+    return (em && em.v86 && typeof em.v86.tick_counter === "number")
+           ? em.v86.tick_counter : null;
+  }catch(e){ return null; }
+}
+function rafAlive(){ return !!WD.rafAt && (Date.now()-WD.rafAt < 2500); }
+
+function scheduleFreezeCheck(){
+  if(WD.checking || WD.fixing || !running || !em) return;
+  if(Date.now()-bootAt < 6000) return;       /* 刚开机：tick 还没跑起来 */
+  WD.checking = true;
+  var grace = Date.now() + 900;              /* 给浏览器恢复调度的时间 */
+  try{ requestAnimationFrame(rafBeat); }catch(e){}
+  var samples = [];
+  function step(){
+    if(!WD.checking) return;
+    if(!running || !em || document.visibilityState !== "visible"){
+      WD.checking=false; return;
+    }
+    if(Date.now() < grace){ setTimeout(step, 350); return; }
+    samples.push({t:vmTick(), raf:rafAlive(), rafAt:WD.rafAt});
+    if(samples.length < 3){ setTimeout(step, 500); return; }
+    WD.checking = false;
+    var tickSame = samples[0].t !== null &&
+                   samples.every(function(s){ return s.t === samples[0].t; });
+    /* 屏幕链断没断，看三次采样期间有没有新帧，比固定超时准 */
+    var rafDead  = samples.every(function(s){ return !s.raf; }) ||
+                   samples[2].rafAt === samples[0].rafAt;
+    if(tickSame || rafDead) reviveVm(rafDead);
+    else WD.fixes = 0;
+  }
+  setTimeout(step, 350);
+}
+
+function reviveVm(hard){
+  if(WD.fixing) return;
+  WD.fixing = true;
+  WD.fixes++;
+  pwrState("boot");                          /* 绿灯闪，无文字 */
+  var soft = false;
+  if(!hard){
+    /* v86 的 run() 无条件重挂一次 CPU tick，能保住当前会话 */
+    try{
+      if(em && em.v86 && typeof em.v86.run === "function"){
+        em.v86.run(); soft = true;
+      }
+    }catch(e){}
+  }
+  setTimeout(function(){
+    /* 不能只看「tick 变了一次」：run() 里的 next_tick 自身就会 +1，
+       哪怕链还是断的。要连采三次都在涨，才算 CPU 循环真跑起来了。 */
+    var s=[], n=0;
+    (function probe(){
+      s.push(vmTick());
+      if(++n < 3){ setTimeout(probe, 250); return; }
+      var moving = s[0] !== null && s[1] > s[0] && s[2] > s[1];
+      var alive = soft && moving && rafAlive();
+      if(alive){ WD.fixes = 0; pwrState("ready"); }
+      else if(!running){ pwrState("off"); }          /* 期间用户关机了，别亮红灯 */
+      else if(WD.fixes <= 3){ reset(); }             /* 冷启动重建两条链 */
+      else { pwrState("error"); }                    /* 连救三次没成，等手动刷新 */
+      WD.fixing=false; WD.checking=false;
+      if(WD.fixes && WD.fixes<=3) setTimeout(scheduleFreezeCheck, 9000);
+    })();
+  }, 900);
+}
+
 /* 唤起软键盘：必须在用户手势里【同步】调用。
    #kbd 平时是 pointer-events:none 的 2x2 透明框，iOS Safari 对这种元素
    直接 focus 经常不弹键盘；这里临时开放交互 + 先 blur 再 focus 制造状态变化。 */
 function wakeKbd(){
   if(!TOUCH) return;
+  var seq = ++rebindSeq;
+  /* 从后台回来时 composing 可能卡在半截组合，先清干净再重建，
+     否则新打的字会被上一轮的组合状态吞掉。 */
+  if(needRebind || composingStuck()){ clearKbdState(); needRebind=false; }
   try{
     kbd.style.pointerEvents = "auto";
     kbd.readOnly = false;
+    /* 无条件 blur：哪怕光标已经在闪（activeElement===kbd），
+       那个焦点也可能是后台恢复后的"假焦点"，IME 会话已断。
+       旧代码这里没问题，出问题的是 150ms 后的兜底判断。 */
     try{ kbd.blur(); }catch(e){}
     try{ kbd.focus({preventScroll:true}); }catch(e){ try{ kbd.focus(); }catch(e2){} }
     try{ kbd.setSelectionRange(kbd.value.length,kbd.value.length); }catch(e){}
+    /* 跨任务边界再补一次。这里【不能】用 activeElement!==kbd 当条件——
+       切回来时它恰好就是 #kbd，旧代码因此什么都不做，于是光标在闪
+       却永远打不进字。这次无条件补，且不 blur（不会收起刚弹的键盘）。 */
+    requestAnimationFrame(function(){
+      if(seq!==rebindSeq) return;
+      try{ kbd.focus({preventScroll:true}); }catch(e){ try{ kbd.focus(); }catch(e2){} }
+    });
     setTimeout(function(){
+      if(seq!==rebindSeq) return;
+      try{ kbd.focus(); }catch(e){}
       try{ kbd.style.pointerEvents="none"; }catch(e){}
-      /* 兜底：若 150ms 后焦点仍没落上，再试一次 */
-      if(document.activeElement !== kbd){ try{ kbd.focus(); }catch(e2){} }
-    }, 150);
+      flushKbd();
+    }, 160);
   }catch(e){}
 }
 /* 夺回输入：切到别的网页或标签页打字后再回来，点一下把键盘焦点强行收回 DOS。
@@ -930,12 +1051,14 @@ function wakeKbd(){
    窗口重新获焦即恢复，只需把焦点从别的输入框摘掉，不主动 focus #kbd（避免双输入）。 */
 var reclaimTimer = null;
 function reclaimKeyboard(btn){
-  try{ window.focus(); }catch(e){}
-  composing = false;                       /* 丢掉切走时残留的半截输入法组合 */
+  /* 丢掉切走时残留的半截输入法组合与脏值，两边设备都要做 */
+  clearKbdState();
+  needRebind=false;
   if(TOUCH){ wakeKbd(); }
   else{
     var ae = document.activeElement;
     if(ae && ae !== document.body && ae.blur){ try{ ae.blur(); }catch(e){} }
+    setTimeout(flushKbd, 60);
   }
   if(btn){
     btn.classList.add("lit");
@@ -978,7 +1101,12 @@ stage.addEventListener("touchend",function(e){
 });
 
 stage.addEventListener("click",function(){
-  if(TOUCH){ if(document.activeElement !== kbd) wakeKbd(); return; }
+  if(TOUCH){
+    /* 后台回来时 activeElement 常常仍是 #kbd（光标在闪），
+       旧判断会直接跳过重建。这里把 needRebind / 卡住的组合同等看待。 */
+    if(needRebind || composingStuck() || document.activeElement !== kbd) wakeKbd();
+    return;
+  }
   if(em && !document.pointerLockElement && em.lock_mouse){
     try{ em.lock_mouse(); }catch(err){}
   }
