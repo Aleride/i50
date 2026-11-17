@@ -1,0 +1,74 @@
+name: Clean up repo (optional)
+
+# 可选：删掉 v86 源码，只留下运行 FreeDOS 需要的东西
+# Actions → Clean up repo → Run workflow
+# ⚠️ 会删除文件，跑之前确认你只需要运行页面、不需要改 v86 本身
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove v86 sources
+        run: |
+          set +e
+          echo "=== 删除前 ==="
+          du -sh . 2>/dev/null | tail -1
+
+          # 源码 / 构建 / 测试 / 文档目录
+          rm -rf src gen lib tests tools docs examples
+          rm -rf .cargo .devcontainer .vscode
+          rm -rf Makefile* Cargo.toml Cargo.lock
+          rm -rf .editorconfig .gitattributes
+
+          # 上游 README（写的是 v86 模拟器说明，跟 I50 无关）
+          # 注意：仓库里实际叫 Readme.md，Linux 区分大小写，
+          # 只写 rm -f README.md 会删不掉。用 -iname 覆盖所有大小写写法。
+          # LICENSE / LICENSE.MIT 保留：开源许可证要跟着项目走
+          find . -maxdepth 1 -type f -iname 'readme*' -delete
+
+          # v86 自带的 workflow（保留我们自己的三个；
+          # fix-build.yml 是早期修旧脚本用的，已经没用，一并清掉）
+          if [ -d .github/workflows ]; then
+            cd .github/workflows
+            ls -1 | grep -v -x -e 'build-dos.yml' -e 'fetch-runtime.yml' -e 'cleanup.yml' \
+              | while read -r f; do rm -f "$f"; echo "  删除 workflow: $f"; done
+            cd - >/dev/null
+          fi
+
+          echo "=== 删除后 ==="
+          du -sh . 2>/dev/null | tail -1
+          echo "--- 剩下的东西 ---"
+          ls -la
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "没有变化，跳过提交"
+          else
+            git commit -m "chore: drop v86 sources, keep runtime + FreeDOS images"
+            git push
+          fi
+
+      - name: Summary
+        run: |
+          {
+            echo "### 清理完成"
+            echo ""
+            echo "保留了：\`bios/\`、\`libv86.js\`、\`v86.wasm\`、\`LICENSE\`、"
+            echo "\`freedos-boot.img\`、\`freedos-disk.img\`、\`freedos.html\`、"
+            echo "\`.github/workflows/\` 里我们自己的三个 workflow"
+            echo ""
+            echo "删掉了：\`src\` \`gen\` \`lib\` \`tests\` \`tools\` \`docs\` \`examples\`、"
+            echo "上游 \`Readme.md\`、v86 自带的 CI 与废弃的 \`fix-build.yml\`"
+          } >> $GITHUB_STEP_SUMMARY
