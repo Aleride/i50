@@ -794,26 +794,22 @@ jobs:
                   disk.add_file("NET/" + name, f.read())
               log("  + C:\\NET\\%s (%d 字节)" % (name, os.path.getsize(src)))
 
-          # MTCP.CFG：IRCjr 从 2009 版起把昵称/用户名/实名从环境变量移到配置文件，
-          # 缺 ircjr_nick 会直接打印 "Need to set IRCJR_NICK in the config file" 并退出。
-          # 写法是「参数名 空格 值」，不是等号；DHCP.EXE 只改写自己认识的行，
-          # 其余行原样保留，所以这些参数能在每次冷启动、每台设备上自动生效。
-          # 文件必须以 CRLF 结尾，否则旧版解析器会报 "line is too long"。
+          # MTCP.CFG：只放网络参数，昵称不再代拟。
+          # 由 A:\IRC.BAT 在运行时按用户输入的 Nick 生成 C:\NET\IRC.CFG，
+          # IRCjr 从 2009 版起从配置文件读 ircjr_nick（写法「参数名 空格 值」，
+          # 不是等号），缺了会打印 "Need to set IRCJR_NICK" 并退出。
+          # 上游示例配置里常带注释形式的 ircjr_* 行，这里全部剔掉，
+          # 免得和用户那一行重复；DHCP 只改写自己认识的行；必须 CRLF 结尾。
           cfg = b"PACKETINT 0x60\r\n"
           if "MTCP.CFG" in tools:
               with open(tools["MTCP.CFG"], "rb") as f:
                   raw = f.read()
               if raw.strip():
                   cfg = raw
-          if b"ircjr_nick" not in cfg.lower():
-              cfg += ("\r\n".join([
-                  "", "# IRCjr",
-                  "ircjr_nick I50",
-                  "ircjr_user i50",
-                  "ircjr_name I50 DOS PC",
-                  "ircjr_connect_timeout 30",
-                  "ircjr_register_timeout 60",
-                  ""]) + "\r\n").encode("ascii")
+          cfg = b"\r\n".join(
+              ln for ln in cfg.replace(b"\r\n", b"\n").split(b"\n")
+              if b"ircjr_" not in ln.lower()
+          ) + b"\r\n"
           # mTCP 解析顺序：数字 IP -> hosts 文件 -> NAMESERVER，hosts 总是最先查。
           # v86 的 Wisp 后端不转发 UDP DNS，guest 的查询只能靠浏览器侧伪造应答，
           # 公共节点抽风时 Telnet 就会永远停在 "Resolving server address"。
@@ -824,7 +820,7 @@ jobs:
                   "HOSTSFILE C:\\NET\\HOSTS.TXT",
                   ""]) + "\r\n").encode("ascii")
           disk.add_file("NET/MTCP.CFG", cfg)
-          log("  + C:\\NET\\MTCP.CFG (%d 字节, 含 IRCjr 参数 + HOSTSFILE)" % len(cfg))
+          log("  + C:\\NET\\MTCP.CFG (%d 字节, 含 HOSTSFILE, 无昵称)" % len(cfg))
 
           hosts = [
               "# mTCP hosts file - IP_Address  name  [aliases]",
@@ -944,9 +940,9 @@ jobs:
           # NET.BAT
           # NETOK=1 时跳过 NE2000：直接敲 NET 或反复点「连网」不会把 TSR
           # 加载第二次、白占常规内存，只做一次 DHCP 续租。
-          # HOSTSFILE / ircjr_nick 已在构建时烤进 C:\NET\MTCP.CFG，
-          # DHCP 只改写自己认识的行、其余原样保留，所以这里不用再补一次
-          # （软盘上也没有 FIND.EXE，之前那段补行分支永远走不到）。
+          # HOSTSFILE 已在构建时烤进 C:\NET\MTCP.CFG，DHCP 只改写自己
+          # 认识的行、其余原样保留，这里不用补。昵称由 A:\IRC.BAT 生成
+          # 单独的 C:\NET\IRC.CFG，不写回 MTCP.CFG。
           net = ["@echo off",
                  "set MTCPCFG=C:\\NET\\MTCP.CFG",
                  'if "%NETOK%"=="1" goto DHCP',
@@ -966,6 +962,52 @@ jobs:
                  "echo DHCP (missing)",
                  ":END"]
           floppy.add_file("NET.BAT", ("\r\n".join(net) + "\r\n").encode("ascii"))
+
+          # IRC.BAT：先让用户自己输 Nick / Server / Channel，再按 Nick 生成
+          # 一份专用 C:\NET\IRC.CFG。不代拟昵称，也不问端口（6667 默认）。
+          # IRCjr 不支持 SASL、也没有注册向导；连完给一个 NICKSERV 界面，
+          # 注册/登录/验证的命令模板由用户自己在 IRCjr 里敲，密码不进脚本、
+          # 不落盘、不过公共节点。第一行用 > 覆盖，每次重连不累积旧昵称。
+          irc = ["@echo off",
+                 "set MTCPCFG=C:\\NET\\MTCP.CFG",
+                 'if not "%NETOK%"=="1" call A:\\NET.BAT',
+                 'if not "%NETOK%"=="1" goto END',
+                 "cls",
+                 "echo  IRC (6667)",
+                 "set N=", "set /p N=Nick: ",
+                 'if "%N%"=="" goto END',
+                 "set S=", "set /p S=Server: ",
+                 'if "%S%"=="" goto END',
+                 "set C=", "set /p C=Channel: ",
+                 'if "%C%"=="" goto END',
+                 "echo ircjr_nick %N%> C:\\NET\\IRC.CFG",
+                 "echo ircjr_user %N%>> C:\\NET\\IRC.CFG",
+                 "echo ircjr_name %N% DOS>> C:\\NET\\IRC.CFG",
+                 "echo ircjr_connect_timeout 30>> C:\\NET\\IRC.CFG",
+                 "echo ircjr_register_timeout 60>> C:\\NET\\IRC.CFG",
+                 "type C:\\NET\\MTCP.CFG >> C:\\NET\\IRC.CFG",
+                 "set MTCPCFG=C:\\NET\\IRC.CFG",
+                 "C:\\NET\\IRCJR.EXE %S% %C%",
+                 "set MTCPCFG=C:\\NET\\MTCP.CFG",
+                 "pause",
+                 ":NS",
+                 "cls",
+                 "echo  NICKSERV",
+                 "echo    1) REGISTER  (new)",
+                 "echo    2) IDENTIFY  (login)",
+                 "echo    3) VERIFY    (mail)",
+                 "echo    0) DOS",
+                 "set R=", "set /p R=Choice: ",
+                 'if "%R%"=="" goto END',
+                 'if "%R%"=="0" goto END',
+                 'if "%R%"=="1" echo  /msg NickServ REGISTER password email',
+                 'if "%R%"=="2" echo  /msg NickServ IDENTIFY %N% password',
+                 'if "%R%"=="3" echo  /msg NickServ VERIFY REGISTER %N% code',
+                 "pause",
+                 "goto NS",
+                 ":END",
+                 "set MTCPCFG=C:\\NET\\MTCP.CFG"]
+          floppy.add_file("IRC.BAT", ("\r\n".join(irc) + "\r\n").encode("ascii"))
 
           # MENU.BAT —— 只列出真实存在的程序
           menu = ["@echo off", ":TOP", "set MTCPCFG=C:\\NET\\MTCP.CFG", "cls",
@@ -1020,12 +1062,8 @@ jobs:
                        'if "%S%"=="" goto TOP',
                        "C:\\NET\\NC.EXE %S% 110", "pause", "goto TOP"]
           if has("IRCJR.EXE"):
-              menu += [":IRC"] + NN + ["echo IRC (6667)",
-                       "set S=", "set /p S=Server: ",
-                       'if "%S%"=="" goto TOP',
-                       "set CH=", "set /p CH=Channel: ",
-                       'if "%CH%"=="" goto TOP',
-                       "C:\\NET\\IRCJR.EXE %S% %CH%", "pause", "goto TOP"]
+              # 昵称不再写死：交给 A:\IRC.BAT 先问 Nick / Server / Channel
+              menu += [":IRC"] + NN + ["call A:\\IRC.BAT", "goto TOP"]
           if has("PING.EXE"):
               menu += [":PING"] + NN + ["set P=", "set /p P=Host or IP: ",
                        'if "%P%"=="" goto TOP',
@@ -1090,6 +1128,8 @@ jobs:
           if browsers:
               H.append("  WEB ......... C:\\WEB\\BOBCAT.EXE  (HTTP 80)")
           H.append("  NOTE ........ NET (direct commands)")
+          if "IRCJR.EXE" in tools:
+              H.append("  IRC ......... A:\\IRC (nick)")
           if extra_merged:
               H.append("  APPS ........ " + "  ".join("C:\\" + d for d in sorted(extra_merged)))
           H += ["", ]
