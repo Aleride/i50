@@ -327,7 +327,7 @@ body.phone #keys{padding:3px}
 body.phone #keys button{min-width:40px;padding:7px 6px;font-size:12px;min-height:34px}
 body.phone #keys button.go{min-width:44px}
 @media(min-width:1200px){ #panel{padding:9px 15px} }
-/* 电脑用物理键盘，不需要「软键盘」键；新键「夺回输入」在所有设备都有 */
+/* 电脑用物理键盘，不需要「软键盘」键；「续录」(RESUME) 在所有设备都有 */
 body.desktop #btn-ime,
 body.desktop #cinema [data-act="ime"]{display:none!important}
 #btn-reclaim.lit,#cinema [data-act="reclaim"].lit{
@@ -348,7 +348,7 @@ body.phone #panel{gap:3px}
 
 <div id="app">
   <div id="panel">
-    <button data-act="reclaim" id="btn-reclaim" title="夺回输入"><svg viewBox="0 0 24 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1" fill="none" stroke="#4a4b3f" stroke-width="1.4"/><path d="M8.5 8H21" fill="none" stroke="#4a4b3f" stroke-width="1.7" stroke-linecap="round"/><path d="M17.5 4.8 21 8l-3.5 3.2" fill="none" stroke="#4a4b3f" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.6" y="6" width="1.8" height="4" fill="#187a43"/></svg></button>
+    <button data-act="reclaim" id="btn-reclaim" title="续录"><svg viewBox="0 0 24 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1" fill="none" stroke="#4a4b3f" stroke-width="1.4"/><path d="M8.5 8H21" fill="none" stroke="#4a4b3f" stroke-width="1.7" stroke-linecap="round"/><path d="M17.5 4.8 21 8l-3.5 3.2" fill="none" stroke="#4a4b3f" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.6" y="6" width="1.8" height="4" fill="#187a43"/></svg></button>
     <button data-act="ime" id="btn-ime" title="软键盘"><svg viewBox="0 0 24 16" aria-hidden="true"><rect x=".5" y=".5" width="23" height="15" rx="1.5" fill="none" stroke="#4a4b3f"/><g fill="#4a4b3f"><rect x="3" y="3" width="2.5" height="2.5"/><rect x="7" y="3" width="2.5" height="2.5"/><rect x="11" y="3" width="2.5" height="2.5"/><rect x="15" y="3" width="2.5" height="2.5"/><rect x="3" y="7" width="2.5" height="2.5"/><rect x="7" y="7" width="2.5" height="2.5"/><rect x="11" y="7" width="2.5" height="2.5"/><rect x="15" y="7" width="2.5" height="2.5"/><rect x="5" y="11" width="13" height="2.5"/></g><rect class="ime-cur" x="19.5" y="3" width="2" height="9" fill="#187a43"/></svg></button>
     <span class="stamp"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiAzMiI+PHJlY3Qgd2lkdGg9IjUyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMDAwIi8+PGcgZmlsbD0iI2ZmZiI+PHJlY3QgeD0iNCIgeT0iNCIgd2lkdGg9IjgiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjE4IiB5PSI0IiB3aWR0aD0iMTQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQwIiB5PSI0IiB3aWR0aD0iOCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjE4IiB5PSI2IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMzgiIHk9IjYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0NiIgeT0iNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjYiIHk9IjgiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIxOCIgeT0iOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjM2IiB5PSI4IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNDgiIHk9IjgiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI2IiB5PSIxMCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjE4IiB5PSIxMCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjM2IiB5PSIxMCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQ4IiB5PSIxMCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjYiIHk9IjEyIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMTgiIHk9IjEyIiB3aWR0aD0iMTIiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjM2IiB5PSIxMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQ4IiB5PSIxMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjYiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMjgiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMzYiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNDgiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNiIgeT0iMTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIyOCIgeT0iMTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIzNiIgeT0iMTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI0OCIgeT0iMTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSI2IiB5PSIxOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjI4IiB5PSIxOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjM2IiB5PSIxOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjQ4IiB5PSIxOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIvPjxyZWN0IHg9IjYiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMTgiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMjgiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iMzgiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNDYiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNCIgeT0iMjIiIHdpZHRoPSI4IiBoZWlnaHQ9IjIiLz48cmVjdCB4PSIyMCIgeT0iMjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyIi8+PHJlY3QgeD0iNDAiIHk9IjIyIiB3aWR0aD0iOCIgaGVpZ2h0PSIyIi8+PC9nPjwvc3ZnPg==" alt="I50"></span>
     <div class="leds">
@@ -376,7 +376,7 @@ body.phone #panel{gap:3px}
 
   <div id="cinema">
     <button data-act="c-menu" title="菜单"><svg viewBox="0 0 24 16" aria-hidden="true"><g fill="#4a4b3f"><rect x="3" y="3" width="18" height="2.4" rx="1"/><rect x="3" y="6.8" width="18" height="2.4" rx="1"/><rect x="3" y="10.6" width="18" height="2.4" rx="1"/></g></svg></button>
-    <button data-act="reclaim" title="夺回输入"><svg viewBox="0 0 24 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1" fill="none" stroke="#4a4b3f" stroke-width="1.4"/><path d="M8.5 8H21" fill="none" stroke="#4a4b3f" stroke-width="1.7" stroke-linecap="round"/><path d="M17.5 4.8 21 8l-3.5 3.2" fill="none" stroke="#4a4b3f" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.6" y="6" width="1.8" height="4" fill="#187a43"/></svg></button>
+    <button data-act="reclaim" title="续录"><svg viewBox="0 0 24 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1" fill="none" stroke="#4a4b3f" stroke-width="1.4"/><path d="M8.5 8H21" fill="none" stroke="#4a4b3f" stroke-width="1.7" stroke-linecap="round"/><path d="M17.5 4.8 21 8l-3.5 3.2" fill="none" stroke="#4a4b3f" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.6" y="6" width="1.8" height="4" fill="#187a43"/></svg></button>
     <button data-act="ime" title="软键盘"><svg viewBox="0 0 24 16" aria-hidden="true"><rect x=".5" y=".5" width="23" height="15" rx="1.5" fill="none" stroke="#4a4b3f"/><g fill="#4a4b3f"><rect x="3" y="3" width="2.5" height="2.5"/><rect x="7" y="3" width="2.5" height="2.5"/><rect x="11" y="3" width="2.5" height="2.5"/><rect x="15" y="3" width="2.5" height="2.5"/><rect x="3" y="7" width="2.5" height="2.5"/><rect x="7" y="7" width="2.5" height="2.5"/><rect x="11" y="7" width="2.5" height="2.5"/><rect x="15" y="7" width="2.5" height="2.5"/><rect x="5" y="11" width="13" height="2.5"/></g><rect class="ime-cur" x="19.5" y="3" width="2" height="9" fill="#187a43"/></svg></button>
     <button data-act="c-rot" title="旋转 90°"><svg viewBox="0 0 24 16" aria-hidden="true"><path d="M4 11a8 6 0 0 1 14-4" fill="none" stroke="#4a4b3f" stroke-width="1.7" stroke-linecap="round"/><path d="M18 2.5v4.5h-4.5" fill="none" stroke="#4a4b3f" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <button data-act="c-exit" title="退出铺满"><svg viewBox="0 0 24 16" aria-hidden="true"><path d="M3 6V3h3 M21 6V3h-3 M3 10v3h3 M21 10v3h-3" fill="none" stroke="#4a4b3f" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -1044,9 +1044,21 @@ function wakeKbd(){
       try{ kbd.style.pointerEvents="none"; }catch(e){}
       flushKbd();
     }, 160);
+    /* 再补一道：部分手机键盘动画要 250~350ms，160ms 那次可能被吃掉，
+       表现就是「点了屏幕却没反应」。这次只在焦点真的不在 #kbd 时补，
+       不 blur（不收起刚弹的键盘），也不抢菜单里正在用的输入框。 */
+    setTimeout(function(){
+      if(seq!==rebindSeq) return;
+      if(menuEl && menuEl.classList.contains("on")) return;
+      var ae = document.activeElement;
+      if(ae && ae !== kbd && ae.tagName === "INPUT") return;
+      if(document.activeElement !== kbd){
+        try{ kbd.focus({preventScroll:true}); }catch(e){ try{ kbd.focus(); }catch(e2){} }
+      }
+    }, 420);
   }catch(e){}
 }
-/* 夺回输入：切到别的网页或标签页打字后再回来，点一下把键盘焦点强行收回 DOS。
+/* 续录 (RESUME)：切到别的网页或标签页打字后再回来，点一下把键盘焦点接回 DOS。
    触摸设备重新 focus #kbd（软键盘随之弹起）；电脑端 v86 的键盘绑定在 document 上，
    窗口重新获焦即恢复，只需把焦点从别的输入框摘掉，不主动 focus #kbd（避免双输入）。 */
 var reclaimTimer = null;
@@ -1080,8 +1092,18 @@ document.addEventListener("pointerdown", function(e){
 var last=null,t0=0,moved=0;
 function mouse(dx,dy,b){ if(em&&running&&em.mouse_send_event) em.mouse_send_event(dx,dy,b); }
 
+/* 软键盘只对「黑色屏幕」本身有反应：机箱外框、边框、顶栏、菜单、
+   键盘条、悬浮条一律不唤起。屏幕 DOM 在档②③ 都不搬家，
+   用 closest 判断即可；旋转后 target 仍是屏幕子元素。 */
+function inBlack(e){
+  var t = e && e.target;
+  return !!(t && t.closest && t.closest("#screen_container"));
+}
+
 stage.addEventListener("touchstart",function(e){
-  wakeKbd();
+  /* 黑屏以外（米白外框、塑料边框、螺丝）完全不接管这次触摸 */
+  if(!inBlack(e)){ last=null; return; }
+  wakeKbd();                      /* 唯一入口：必须留在用户手势里同步调用 */
   var t=e.touches[0]; last={x:t.clientX,y:t.clientY}; t0=Date.now(); moved=0;
 },{passive:true});
 
@@ -1095,19 +1117,16 @@ stage.addEventListener("touchmove",function(e){
 
 stage.addEventListener("touchend",function(e){
   if(e.touches.length===0){
-    if(Date.now()-t0<250 && moved<12){ mouse(0,0,1); setTimeout(function(){mouse(0,0,0);},40); }
+    if(last && Date.now()-t0<250 && moved<12){ mouse(0,0,1); setTimeout(function(){mouse(0,0,0);},40); }
     last=null;
   }
 });
 
-stage.addEventListener("click",function(){
-  if(TOUCH){
-    /* 后台回来时 activeElement 常常仍是 #kbd（光标在闪），
-       旧判断会直接跳过重建。这里把 needRebind / 卡住的组合同等看待。 */
-    if(needRebind || composingStuck() || document.activeElement !== kbd) wakeKbd();
-    return;
-  }
-  if(em && !document.pointerLockElement && em.lock_mouse){
+stage.addEventListener("click",function(e){
+  /* 触摸端唤起已由 touchstart 按黑屏区域处理，这里不重复 focus，
+     免得两次 blur/focus 把刚弹起的输入法闪掉。 */
+  if(TOUCH) return;
+  if(inBlack(e) && em && !document.pointerLockElement && em.lock_mouse){
     try{ em.lock_mouse(); }catch(err){}
   }
 });
@@ -1116,6 +1135,28 @@ document.addEventListener("pointerlockchange",function(){
 });
 
 function applyZoom(){ applyTransform(); }
+
+/* 手机软键盘弹出/收起会改 visualViewport：页面被顶上去、屏幕缩放也跟着错位。
+   重新算一次，并把被推上去的页面拉回原点。收起后若焦点已丢，标记下次
+   点屏幕重建（那时没有正在输入的字，不会丢半截拼音）。 */
+(function(){
+  var vv = window.visualViewport;
+  if(!vv) return;
+  var tmr=null, lastH=vv.height;
+  function afterKb(){
+    clearTimeout(tmr);
+    tmr=setTimeout(function(){
+      try{ fit(); }catch(e){}
+      try{ if(window.scrollY>0) window.scrollTo(0,0); }catch(e){}
+      if(TOUCH && vv.height>lastH && document.activeElement!==kbd) needRebind=true;
+      lastH=vv.height;
+    },140);
+  }
+  try{
+    vv.addEventListener("resize",afterKb);
+    vv.addEventListener("scroll",afterKb);
+  }catch(e){}
+})();
 
 /* ---------------- 菜单 ---------------- */
 function openMenu(){
@@ -1182,18 +1223,15 @@ var __saveRelay = function(){
 };
 
 /* ---------------- 按钮 ---------------- */
-/* 点功能键 / 快捷命令后把软键盘焦点还给 DOS。
-   菜单开着时不打扰；焦点本来就在 #kbd 时也不重复 focus（避免输入法闪烁）。
-   cmd / key 两个分支会提前 return，所以必须在这里显式调用，
-   只靠函数末尾那段逻辑覆盖不到。 */
-function keepSoftKbd(){
-  if(TOUCH && !menuEl.classList.contains("on") && document.activeElement !== kbd) wakeKbd();
-}
+/* 按钮一律不唤起软键盘：点「菜单」「连网」「帮助」、Esc、旋转、Caps 等
+   都只是把命令送进 DOS。mousedown 已阻止按钮抢焦点，所以输入法本来就
+   开着的会继续开着；没开就保持没开 —— 想输入只有两条路：
+   ① 点键盘图标（或续录） ② 点黑色屏幕。 */
 document.addEventListener("click",function(e){
   var b=e.target.closest("button"); if(!b) return;
 
-  if(b.dataset.cmd){ runCmd(b.dataset.cmd); keepSoftKbd(); return; }
-  if(b.dataset.key){ tap(SC[b.dataset.key]||[]); keepSoftKbd(); return; }
+  if(b.dataset.cmd){ runCmd(b.dataset.cmd); return; }
+  if(b.dataset.key){ tap(SC[b.dataset.key]||[]); return; }
 
   switch(b.dataset.act){
     /* 顶栏 ⛶ = ② 黑色屏幕铺满网页 / 还原 */
@@ -1208,7 +1246,7 @@ document.addEventListener("click",function(e){
       if(!canRotate()) return;
       rot = rot ? 0 : 90; fit(); break;
     case "menu": openMenu(); break;
-    /* 夺回输入：切走再回来点一下即可继续录入 */
+    /* 续录：切走再回来点一下即可继续录入 */
     case "reclaim": reclaimKeyboard(b); break;
     /* 手动唤起系统软键盘（手机点屏幕不稳定时的可靠入口） */
     case "ime": wakeKbd(); break;
@@ -1239,9 +1277,6 @@ document.addEventListener("click",function(e){
     case "m-off": closeMenu(); shutdown(); break;
     case "m-close": closeMenu(); break;
   }
-  /* 敲功能键 / 快捷命令后，把输入法还给 DOS（菜单、关机、全屏除外） */
-  var keepKb = ["ime","rot","dock","caps","cad","m-reset","c-rot"].indexOf(b.dataset.act) >= 0;
-  if(keepKb) keepSoftKbd();
 });
 
 /* ---------------- 起飞 ---------------- */
